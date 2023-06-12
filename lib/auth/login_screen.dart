@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:join/main/main_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -51,7 +52,10 @@ class _LoginScreenState extends State<LoginScreen> {
                   height: 50,
                 ),
                 InkWell(
-                  onTap: () async {},
+                  onTap: () async {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (builder) => MainScreen()));
+                  },
                   child: Center(
                     child: Container(
                       height: 53,
