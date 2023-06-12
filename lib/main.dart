@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:animated_splash_screen/animated_splash_screen.dart';
+import 'package:join/auth/login_screen.dart';
+import 'package:page_transition/page_transition.dart';
 
 void main() {
   runApp(const MyApp());
@@ -31,7 +34,19 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: AnimatedSplashScreen(
+        nextScreen: LoginScreen(),
+        splash: Image.asset(
+          'assets/splash.png',
+          height: 150,
+          width: 150,
+        ),
+        duration: 2000,
+        splashIconSize: 150,
+        splashTransition: SplashTransition.slideTransition,
+        pageTransitionType: PageTransitionType.fade,
+        backgroundColor: Colors.white,
+      ),
     );
   }
 }
