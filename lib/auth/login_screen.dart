@@ -32,7 +32,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           color: Color(0xff246A73),
                           fontSize: 30,
                           fontWeight: FontWeight.w700,
-                          fontFamily: "Poppins-Regular")),
+                          fontFamily: "ProximaNova")),
                 ),
                 Container(
                   margin: EdgeInsets.only(top: 5, left: 15),
@@ -43,7 +43,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     style: TextStyle(
                         color: Color(0xff736F7F),
                         fontSize: 16,
-                        fontFamily: "Poppins-Regular",
+                        fontFamily: "ProximaNova",
                         fontWeight: FontWeight.w400),
                   ),
                 ),
@@ -84,7 +84,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 color: Color(0xff160F29),
                                 fontWeight: FontWeight.w600,
                                 fontSize: 18,
-                                fontFamily: "Poppins"),
+                                fontFamily: "ProximaNova"),
                           )
                         ],
                       ),
@@ -127,7 +127,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 color: Color(0xff160F29),
                                 fontWeight: FontWeight.w600,
                                 fontSize: 18,
-                                fontFamily: "Poppins"),
+                                fontFamily: "ProximaNova"),
                           )
                         ],
                       ),
@@ -170,7 +170,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 color: Color(0xff160F29),
                                 fontWeight: FontWeight.w600,
                                 fontSize: 18,
-                                fontFamily: "Poppins"),
+                                fontFamily: "ProximaNova"),
                           )
                         ],
                       ),
@@ -189,8 +189,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       "By registering or creating an account, you agree to our Terms of Use. Read our Privacy Policy to learn more about how we process your data.",
                       style: TextStyle(
                           fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                          fontFamily: "Poppins-Regular"),
+                          color: Color(0xff246A73),
+                          fontWeight: FontWeight.w400,
+                          fontFamily: "ProximaNova"),
                       textAlign: TextAlign.center,
                     ),
                   ),
