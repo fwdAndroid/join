@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:join/activity/next_activity_page.dart';
 
 class CreateActivity extends StatefulWidget {
   @override
@@ -50,7 +51,11 @@ class _CreateActivityState extends State<CreateActivity> {
           "Create Activity",
           overflow: TextOverflow.ellipsis,
           textAlign: TextAlign.left,
-          //  style: AppStyle.txtProximaNovaSemibold20,
+          style: TextStyle(
+              fontFamily: "ProximaNova",
+              fontWeight: FontWeight.w700,
+              fontSize: 17,
+              color: Color(0xff160F29)),
         ),
       ),
       body: SingleChildScrollView(
