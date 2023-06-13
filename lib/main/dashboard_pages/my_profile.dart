@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:join/app_setting/app_setting.dart';
 
 class MyProfile extends StatefulWidget {
   const MyProfile({super.key});
@@ -25,8 +26,8 @@ class _MyProfileState extends State<MyProfile> {
           actions: [
             InkWell(
               onTap: () {
-                // Navigator.push(context,
-                //     MaterialPageRoute(builder: (builder) => AppSetting()));
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (builder) => AppSetting()));
               },
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
