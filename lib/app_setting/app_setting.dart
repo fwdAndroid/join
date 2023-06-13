@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:join/app_setting/edit_profile.dart';
 
 class AppSetting extends StatefulWidget {
   const AppSetting({super.key});
@@ -16,6 +17,7 @@ class _AppSettingState extends State<AppSetting> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color.fromARGB(255, 225, 243, 246),
       appBar: AppBar(
         centerTitle: true,
         title: Text(
@@ -160,8 +162,8 @@ class _AppSettingState extends State<AppSetting> {
             ),
             InkWell(
               onTap: () {
-                // Navigator.push(context,
-                //     MaterialPageRoute(builder: (builder) => EditProfile()));
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (builder) => EditProfile()));
               },
               child: Container(
                 margin: EdgeInsets.only(
