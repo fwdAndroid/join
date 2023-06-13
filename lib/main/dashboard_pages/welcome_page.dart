@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:join/filters/filters.dart';
+import 'package:join/notification/notiy.dart';
 
 class WelComePage extends StatefulWidget {
   const WelComePage({super.key});
@@ -38,8 +40,8 @@ class _WelComePageState extends State<WelComePage> {
           actions: [
             InkWell(
               onTap: () {
-                // Navigator.push(context,
-                //     MaterialPageRoute(builder: (builder) => Filters()));
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (builder) => Filters()));
               },
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -48,8 +50,8 @@ class _WelComePageState extends State<WelComePage> {
             ),
             InkWell(
               onTap: () {
-                // Navigator.push(
-                //     context, MaterialPageRoute(builder: (builder) => Noti()));
+                Navigator.push(
+                    context, MaterialPageRoute(builder: (builder) => Noti()));
               },
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
