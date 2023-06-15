@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:join/main/main_screen.dart';
+import 'package:join/database/database_methods.dart';
+import 'package:join/status/checkstatus.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -53,8 +54,12 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 InkWell(
                   onTap: () async {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (builder) => MainScreen()));
+                    await DatabaseMethods().signInWithGoogle().then((value) => {
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (builder) => CheckStatus()))
+                        });
                   },
                   child: Center(
                     child: Container(
