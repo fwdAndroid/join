@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:join/database/database_methods.dart';
 import 'package:join/emailprofile.dart/userphotoemail.dart';
+import 'package:join/main/main_screen.dart';
 
 class CheckStatus extends StatefulWidget {
   const CheckStatus({super.key});
@@ -37,8 +38,8 @@ class _CheckStatusState extends State<CheckStatus> {
 
     if (doesDocExist) {
       print("wrong which");
-      // Navigator.push(
-      //     context, MaterialPageRoute(builder: (builder) => UserStatus()));
+      Navigator.push(
+          context, MaterialPageRoute(builder: (builder) => MainScreen()));
     } else {
       DatabaseMethods().emailGoogle().then((value) => {
             Navigator.push(context,
