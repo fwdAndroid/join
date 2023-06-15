@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:join/auth/phone/continue_phone.dart';
 import 'package:join/database/database_methods.dart';
 import 'package:join/status/checkstatus.dart';
 
@@ -147,6 +148,12 @@ class _LoginScreenState extends State<LoginScreen> {
                   height: 20,
                 ),
                 InkWell(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (builder) => ContinuePhone()));
+                  },
                   child: Center(
                     child: Container(
                       height: 53,

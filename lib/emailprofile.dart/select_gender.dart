@@ -64,7 +64,7 @@ class _SelectGenderState extends State<SelectGender> {
                 width: 16,
               ),
               elevation: 16,
-              style: const TextStyle(color: Colors.deepPurple),
+              style: const TextStyle(color: Colors.black),
               onChanged: (String? value) {
                 // This is called when the user selects an item.
                 setState(() {

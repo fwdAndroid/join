@@ -44,6 +44,28 @@ class DatabaseMethods {
     return res;
   }
 
+  Future<String> phone() async {
+    String res = 'Some error occured';
+    try {
+      //Add User to the database with modal
+
+      await firebaseFirestore
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .set(
+        {
+          "phone": FirebaseAuth.instance.currentUser!.phoneNumber.toString(),
+          "uid": FirebaseAuth.instance.currentUser!.uid
+        },
+      );
+      res = 'success';
+      debugPrint(res);
+    } catch (e) {
+      res = e.toString();
+    }
+    return res;
+  }
+
   //Profile Details
   // Future<String> profileDetail({
   //   required String email,
