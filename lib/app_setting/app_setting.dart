@@ -1,5 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:join/app_setting/edit_profile.dart';
+import 'package:join/auth/login_screen.dart';
 
 class AppSetting extends StatefulWidget {
   const AppSetting({super.key});
@@ -545,8 +548,21 @@ class _AppSettingState extends State<AppSetting> {
                         ),
                         TextButton(
                           onPressed: () async {
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                content: Text("Account Deleted Successfully")));
+                            await FirebaseFirestore.instance
+                                .collection("users")
+                                .doc(FirebaseAuth.instance.currentUser!.uid)
+                                .delete()
+                                .then((value) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                      content: Text(
+                                          "Account Deleted Successfully")));
+                              FirebaseAuth.instance.currentUser!.delete();
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (builder) => LoginScreen()));
+                            });
                           },
                           child: Text("Yes"),
                         ),
@@ -614,8 +630,15 @@ class _AppSettingState extends State<AppSetting> {
                         ),
                         TextButton(
                           onPressed: () async {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text("Logout Successfully")));
+                            await FirebaseAuth.instance.signOut().then((value) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                      content: Text("Logout Successfully")));
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (builder) => LoginScreen()));
+                            });
                           },
                           child: Text("Yes"),
                         ),
