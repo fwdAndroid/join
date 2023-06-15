@@ -302,6 +302,7 @@ class _DetailPageState extends State<DetailPage> {
                                         .set({
                                       "previousuuid": widget.uuid,
                                       "title": widget.title,
+                                      "status": "ongoing",
                                       "startTime": widget.startTime,
                                       "endTime": widget.endTime,
                                       "date": widget.date,

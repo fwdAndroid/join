@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:join/app_setting/app_setting.dart';
 
@@ -97,56 +99,79 @@ class _MyProfileState extends State<MyProfile> {
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Container(
-                      height: 70,
-                      width: 70,
-                      child: Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          Align(
-                            alignment: Alignment.center,
-                            child: Container(
-                              height: 61,
-                              width: 61,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(30),
-                                // gradient: LinearGradient(
-                                //   begin: Alignment(
-                                //     1,
-                                //     0.83,
-                                //   ),
-                                //   end: Alignment(
-                                //     0.16,
-                                //     0.2,
-                                //   ),
-                                //   colors: [
-                                //     ColorConstant.redA100,
-                                //     ColorConstant.red300,
-                                //   ],
-                                // ),
-                              ),
-                              child: CircleAvatar(
-                                backgroundImage: AssetImage("assets/scan.png"),
-                              ),
+                    StreamBuilder(
+                        stream: FirebaseFirestore.instance
+                            .collection("users")
+                            .doc(FirebaseAuth.instance.currentUser!.uid)
+                            .snapshots(),
+                        builder: (context, AsyncSnapshot snapshot) {
+                          if (!snapshot.hasData) {
+                            return new CircularProgressIndicator();
+                          }
+                          var document = snapshot.data;
+                          return Container(
+                            height: 70,
+                            width: 70,
+                            child: Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                Align(
+                                  alignment: Alignment.center,
+                                  child: Container(
+                                    height: 61,
+                                    width: 61,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(30),
+                                      // gradient: LinearGradient(
+                                      //   begin: Alignment(
+                                      //     1,
+                                      //     0.83,
+                                      //   ),
+                                      //   end: Alignment(
+                                      //     0.16,
+                                      //     0.2,
+                                      //   ),
+                                      //   colors: [
+                                      //     ColorConstant.redA100,
+                                      //     ColorConstant.red300,
+                                      //   ],
+                                      // ),
+                                    ),
+                                    child: CircleAvatar(
+                                      backgroundImage:
+                                          NetworkImage(document['photo']),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                          ),
-                        ],
-                      ),
-                    ),
+                          );
+                        }),
                     Padding(
                       padding: EdgeInsets.only(
                         top: 19,
                       ),
-                      child: Text(
-                        "Fawad Kaleem",
-                        overflow: TextOverflow.ellipsis,
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                            color: Color(0xff160F29),
-                            fontWeight: FontWeight.w600,
-                            fontFamily: "ProximaNova",
-                            fontSize: 18),
-                      ),
+                      child: StreamBuilder(
+                          stream: FirebaseFirestore.instance
+                              .collection("users")
+                              .doc(FirebaseAuth.instance.currentUser!.uid)
+                              .snapshots(),
+                          builder: (context, AsyncSnapshot snapshot) {
+                            if (!snapshot.hasData) {
+                              return new CircularProgressIndicator();
+                            }
+                            var document = snapshot.data;
+                            return Text(
+                              document['name'],
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                  color: Color(0xff160F29),
+                                  fontWeight: FontWeight.w600,
+                                  fontFamily: "ProximaNova",
+                                  fontSize: 18),
+                            );
+                          }),
                     ),
                     SizedBox(
                       height: 10,
