@@ -152,6 +152,7 @@ class _MapScreenActivityState extends State<MapScreenActivity> {
 
       FirebaseFirestore.instance.collection("activity").doc(uuid).set({
         "title": widget.title,
+        "uuid": uuid,
         "description": widget.desc,
         "location": widget.search,
         "address": _locationController.text,
