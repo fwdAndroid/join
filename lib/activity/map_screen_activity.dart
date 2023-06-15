@@ -1,4 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:join/database/storage_methods.dart';
 import 'package:join/main/main_screen.dart';
 import 'package:uuid/uuid.dart';
 
@@ -95,6 +98,7 @@ class _MapScreenActivityState extends State<MapScreenActivity> {
                             )),
                         margin: EdgeInsets.only(left: 15, top: 10, right: 10),
                         child: TextField(
+                          controller: _locationController,
                           decoration: InputDecoration(
                               focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(6),
@@ -122,12 +126,7 @@ class _MapScreenActivityState extends State<MapScreenActivity> {
                               fontSize: 14, fontWeight: FontWeight.w400),
                         )),
                     InkWell(
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (builder) => MainScreen()));
-                      },
+                      onTap: createProfile,
                       child: Container(
                           margin: EdgeInsets.only(
                               left: 15, top: 10, right: 10, bottom: 10),
@@ -143,30 +142,33 @@ class _MapScreenActivityState extends State<MapScreenActivity> {
     );
   }
 
-  // void createProfile() async {
-  //   if (widget.desc.isEmpty || widget.title.isEmpty) {
-  //     ScaffoldMessenger.of(context)
-  //         .showSnackBar(SnackBar(content: Text("All Fields are required")));
-  //   } else {
-  //     String photoURL = await StorageMethods()
-  //         .uploadImageToStorage('UserPics', widget.image!, true);
+  void createProfile() async {
+    if (_locationController.text.isEmpty) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("All Fields are required")));
+    } else {
+      String photoURL = await StorageMethods()
+          .uploadImageToStorage('UserPics', widget.image!, true);
 
-  //     FirebaseFirestore.instance.collection("activity").doc(uuid).set({
-  //       "title": widget.title,
-  //       "description": widget.desc,
-  //       "location": widget.search,
-  //       "address": _locationController.text,
-  //       "category": widget.cate,
-  //       "photo": photoURL,
-  //       "date": widget.day,
-  //       "uid": FirebaseAuth.instance.currentUser!.uid,
-  //       "startTime": widget.starttime,
-  //       "endTime": widget.endtime,
-  //     }).then((value) {
-  //       showSnakBar("Completed", context);
-  //       Navigator.push(
-  //           context, MaterialPageRoute(builder: (builder) => MainScreen()));
-  //     });
-  //   }
-  // }
+      FirebaseFirestore.instance.collection("activity").doc(uuid).set({
+        "title": widget.title,
+        "description": widget.desc,
+        "location": widget.search,
+        "address": _locationController.text,
+        "category": widget.cate,
+        "photo": photoURL,
+        "date": widget.day,
+        "uid": FirebaseAuth.instance.currentUser!.uid,
+        "startTime": widget.starttime,
+        "endTime": widget.endtime,
+        "activity": widget.cate,
+        "activitystatus": "ongoing"
+      }).then((value) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Activity Created Successfully")));
+        Navigator.push(
+            context, MaterialPageRoute(builder: (builder) => MainScreen()));
+      });
+    }
+  }
 }

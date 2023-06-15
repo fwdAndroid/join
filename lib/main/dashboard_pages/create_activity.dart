@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:join/activity/next_activity_page.dart';
+import 'package:join/widgets/utils.dart';
 
 class CreateActivity extends StatefulWidget {
   @override
@@ -13,12 +14,14 @@ class _CreateActivityState extends State<CreateActivity> {
   TextEditingController createTitleController = TextEditingController();
 
   List<String> dropdownItemList = [
-    "Art",
-    "Culture",
-    "Music",
+    "Physical Activities",
+    "Interllectual Activities",
+    "Sip Together",
+    "Creative Activities",
+    "Relaxation and Leisure Activities"
   ];
 
-  String art = "Art";
+  String art = "Physical Activities";
 
   TextEditingController descriptiontextController = TextEditingController();
 
@@ -27,12 +30,6 @@ class _CreateActivityState extends State<CreateActivity> {
   TextEditingController createDateController = TextEditingController();
   TextEditingController endTimeController = TextEditingController();
   TextEditingController startTimeController = TextEditingController();
-
-  List<String> dropdownItemList1 = [
-    "Item One",
-    "Item Two",
-    "Item Three",
-  ];
 
   bool switchValue1 = true;
   bool switchValue2 = true;
@@ -157,15 +154,16 @@ class _CreateActivityState extends State<CreateActivity> {
                 )),
                 borderRadius: BorderRadius.circular(6),
                 value: art,
+                focusColor: Colors.black,
                 isDense: true,
                 isExpanded: true,
                 icon: Image.asset(
                   "assets/Chevon Left.png",
-                  height: 6,
-                  width: 6,
+                  height: 16,
+                  width: 16,
                 ),
                 elevation: 16,
-                style: const TextStyle(color: Colors.deepPurple),
+                style: const TextStyle(color: Colors.black),
                 onChanged: (String? value) {
                   // This is called when the user selects an item.
                   setState(() {
@@ -411,15 +409,21 @@ class _CreateActivityState extends State<CreateActivity> {
                       fixedSize: Size(343, 48),
                       backgroundColor: Color(0xff246A73)),
                   onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (builder) => NextActivityPage(
-                                  title: createTitleController.text,
-                                  image: _image,
-                                  description: descriptiontextController.text,
-                                  cate: art,
-                                )));
+                    if (createTitleController.text.isEmpty ||
+                        descriptiontextController.text.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text("All Fields are Required")));
+                    } else {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (builder) => NextActivityPage(
+                                    title: createTitleController.text,
+                                    image: _image,
+                                    description: descriptiontextController.text,
+                                    cate: art,
+                                  )));
+                    }
                   },
                   child: Text(
                     "Next",
@@ -433,9 +437,9 @@ class _CreateActivityState extends State<CreateActivity> {
   }
 
   selectImage() async {
-    // Uint8List ui = await pickImage(ImageSource.gallery);
-    // setState(() {
-    //   _image = ui;
-    // });
+    Uint8List ui = await pickImage(ImageSource.gallery);
+    setState(() {
+      _image = ui;
+    });
   }
 }

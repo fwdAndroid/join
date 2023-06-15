@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:join/activity/map_screen_activity.dart';
 
-import 'package:uuid/uuid.dart';
-
 class NextActivityPage extends StatefulWidget {
   final title;
   final description;
@@ -27,7 +25,6 @@ class _NextActivityPageState extends State<NextActivityPage> {
   TextEditingController startTimeController = TextEditingController();
   TextEditingController endTimeController = TextEditingController();
   DateTime? _selectedDate;
-  var uuid = Uuid().v4();
 
   @override
   Widget build(BuildContext context) {
@@ -228,6 +225,9 @@ class _NextActivityPageState extends State<NextActivityPage> {
                     width: 161,
                     height: 46,
                     child: TextField(
+                      onTap: () {
+                        _startTime(context);
+                      },
                       controller: startTimeController,
                       decoration: InputDecoration(
                         contentPadding: EdgeInsets.only(top: 20, left: 10),
@@ -293,6 +293,9 @@ class _NextActivityPageState extends State<NextActivityPage> {
                     width: 161,
                     height: 46,
                     child: TextField(
+                      onTap: () {
+                        _endTime(context);
+                      },
                       controller: endTimeController,
                       decoration: InputDecoration(
                         contentPadding: EdgeInsets.only(top: 20, left: 10),
@@ -341,22 +344,27 @@ class _NextActivityPageState extends State<NextActivityPage> {
                   style: TextStyle(color: Colors.white, fontSize: 16),
                 )),
           ),
-          Container(
-              margin: EdgeInsets.only(
-                left: 15,
-                right: 15,
-                top: 10,
-              ),
-              child: TextButton(
-                onPressed: () {},
-                child: Text(
-                  "Commercial hosts click here",
-                  style: TextStyle(color: Color(0xff246A73)),
-                ),
-              ))
         ],
       ),
     );
+  }
+
+  _startTime(BuildContext context) async {
+    var time = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+      //timeController.text = time.format(context) from here
+    ); //end of showTimePicker
+    startTimeController.text = time!.format(context); // to here
+  }
+
+  _endTime(BuildContext context) async {
+    var time = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+      //timeController.text = time.format(context) from here
+    ); //end of showTimePicker
+    endTimeController.text = time!.format(context); // to here
   }
 
   _selectDate(BuildContext context) async {
