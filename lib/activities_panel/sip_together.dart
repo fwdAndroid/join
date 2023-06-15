@@ -164,6 +164,7 @@ class _SipTogetherState extends State<SipTogether> {
                                         builder: (builder) => DetailPage(
                                               date: data['date'],
                                               image: data['photo'],
+                                              statis: data['activitystatus'],
                                               title: data['title'],
                                               desc: data['description'],
                                               endTime: data['endTime'],

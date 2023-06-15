@@ -163,6 +163,7 @@ class _RelaxationState extends State<Relaxation> {
                                     MaterialPageRoute(
                                         builder: (builder) => DetailPage(
                                               date: data['date'],
+                                              statis: data['activitystatus'],
                                               image: data['photo'],
                                               title: data['title'],
                                               desc: data['description'],
