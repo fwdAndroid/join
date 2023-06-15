@@ -5,21 +5,22 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:join/database/storage_methods.dart';
-import 'package:join/emailprofile.dart/user_dob.dart';
-import 'package:join/main/main_screen.dart';
+import 'package:intl/intl.dart';
+import 'package:join/emailprofile.dart/user_phonenumber.dart';
 import 'package:join/widgets/utils.dart';
 
-class UserPhotoEmail extends StatefulWidget {
-  const UserPhotoEmail({super.key});
+class UserDateofBirth extends StatefulWidget {
+  const UserDateofBirth({super.key});
 
   @override
-  State<UserPhotoEmail> createState() => _UserPhotoEmailState();
+  State<UserDateofBirth> createState() => _UserDateofBirthState();
 }
 
-class _UserPhotoEmailState extends State<UserPhotoEmail> {
+class _UserDateofBirthState extends State<UserDateofBirth> {
   Uint8List? _image;
   TextEditingController nameController = TextEditingController();
   bool _isLoading = false;
+  DateTime? _selectedDate;
 
   @override
   Widget build(BuildContext context) {
@@ -36,70 +37,12 @@ class _UserPhotoEmailState extends State<UserPhotoEmail> {
             height: 30,
           ),
           Container(
-            margin: EdgeInsets.only(
-              left: 20,
-              right: 20,
-            ),
-            child: InkWell(
-              onTap: () => selectImage(),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  width: 374,
-                  height: 157,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(
-                      color: Color(0xffD2D2D2),
-                    ),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      _image != null
-                          ? CircleAvatar(
-                              radius: 59, backgroundImage: MemoryImage(_image!))
-                          : Image.asset(
-                              "assets/phone.png",
-                              width: 51,
-                              height: 39,
-                            ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: RichText(
-                          text: TextSpan(
-                            text: 'Upload photo profile',
-                            style: TextStyle(
-                              fontFamily: 'ProximaNova',
-                              fontWeight: FontWeight.w500,
-                              color: Colors.black,
-                              fontStyle: FontStyle.normal,
-                            ),
-                            children: <TextSpan>[
-                              TextSpan(
-                                  text: '*',
-                                  style: TextStyle(
-                                    fontFamily: 'ProximaNova',
-                                    fontWeight: FontWeight.w500,
-                                    fontStyle: FontStyle.normal,
-                                  )),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-          Container(
             margin: EdgeInsets.only(left: 25, right: 25, top: 20),
             height: 46,
             child: TextFormField(
+              onTap: () {
+                _selectDate(context);
+              },
               decoration: InputDecoration(
                 prefixIcon: Icon(
                   Icons.person_2,
@@ -120,7 +63,7 @@ class _UserPhotoEmailState extends State<UserPhotoEmail> {
                 border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(6),
                     borderSide: BorderSide(color: Colors.grey)),
-                hintText: "Enter Name",
+                hintText: "Enter Date of Birth",
                 helperStyle: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w200,
@@ -161,25 +104,40 @@ class _UserPhotoEmailState extends State<UserPhotoEmail> {
     });
   }
 
+  _selectDate(BuildContext context) async {
+    var newSelectedDate = await showDatePicker(
+      context: context,
+      initialDate: _selectedDate ?? DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2040),
+    );
+
+    if (newSelectedDate != null) {
+      _selectedDate = newSelectedDate;
+      nameController
+        ..text = DateFormat.yMMMd().format(_selectedDate!)
+        ..selection = TextSelection.fromPosition(TextPosition(
+            offset: nameController.text.length,
+            affinity: TextAffinity.upstream));
+    }
+  }
+
   void createProfile() async {
-    if (nameController.text.isEmpty || _image!.isEmpty) {
+    if (nameController.text.isEmpty) {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text("All Fields are Required")));
     } else {
-      String photoURL = await StorageMethods()
-          .uploadImageToStorage('ProfilePics', _image!, false);
       await FirebaseFirestore.instance
           .collection("users")
           .doc(FirebaseAuth.instance.currentUser!.uid)
-          .update({"name": nameController.text, "photo": photoURL}).then(
-              (value) => {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text("Name and Photo Added"))),
-                    Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: (builder) => UserDateofBirth()))
-                  });
+          .update({
+        "dob": nameController.text,
+      }).then((value) => {
+                ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text("Name and Photo Added"))),
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (builder) => UserPhoneNumber()))
+              });
     }
   }
 }
