@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:join/activities_details/detail.page.dart';
 
 class Create extends StatefulWidget {
   const Create({super.key});
@@ -156,7 +157,21 @@ class _CreateState extends State<Create> {
                             ),
                             Spacer(),
                             ElevatedButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (builder) => DetailPage(
+                                              date: data['date'],
+                                              image: data['photo'],
+                                              title: data['title'],
+                                              desc: data['description'],
+                                              endTime: data['endTime'],
+                                              uuid: data['uuid'],
+                                              location: data['location'],
+                                              startTime: data['startTime'],
+                                            )));
+                              },
                               child: Text(
                                 "View Details",
                                 style:
