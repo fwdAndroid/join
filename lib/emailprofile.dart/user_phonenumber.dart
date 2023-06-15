@@ -31,6 +31,7 @@ class _UserPhoneNumberState extends State<UserPhoneNumber> {
             margin: EdgeInsets.only(left: 25, right: 25, top: 20),
             height: 46,
             child: TextFormField(
+              keyboardType: TextInputType.number,
               decoration: InputDecoration(
                 prefixIcon: Icon(
                   Icons.phone,
@@ -97,7 +98,7 @@ class _UserPhoneNumberState extends State<UserPhoneNumber> {
         "phone": nameController.text,
       }).then((value) => {
                 ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text("Name and Photo Added"))),
+                    SnackBar(content: Text("Phone Number Added"))),
                 Navigator.pushReplacement(context,
                     MaterialPageRoute(builder: (builder) => SelectGender()))
               });

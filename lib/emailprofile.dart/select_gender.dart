@@ -11,7 +11,13 @@ class SelectGender extends StatefulWidget {
 }
 
 class _SelectGenderState extends State<SelectGender> {
-  TextEditingController nameController = TextEditingController();
+  List<String> dropdownItemList = [
+    "Male",
+    "Female",
+    "Others",
+  ];
+
+  String art = "Male";
   bool _isLoading = false;
   @override
   Widget build(BuildContext context) {
@@ -29,38 +35,49 @@ class _SelectGenderState extends State<SelectGender> {
           ),
           Container(
             margin: EdgeInsets.only(left: 25, right: 25, top: 20),
-            height: 46,
-            child: TextFormField(
+            height: 80,
+            child: DropdownButtonFormField<String>(
+              focusColor: Colors.black,
               decoration: InputDecoration(
-                prefixIcon: Icon(
-                  Icons.male,
-                  color: Colors.grey,
-                ),
-                filled: true,
-                contentPadding: EdgeInsets.only(top: 10),
-                fillColor: Colors.white,
-                focusedBorder: OutlineInputBorder(
+                  hintStyle: TextStyle(color: Colors.black),
+                  fillColor: Colors.black,
+                  labelStyle: TextStyle(color: Colors.black),
+                  disabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(6),
-                    borderSide: BorderSide(color: Colors.grey)),
-                disabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black),
+                  ),
+                  focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(6),
-                    borderSide: BorderSide(color: Colors.grey)),
-                enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black),
+                  ),
+                  border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(6),
-                    borderSide: BorderSide(color: Colors.grey)),
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(6),
-                    borderSide: BorderSide(color: Colors.grey)),
-                hintText: "Gender",
-                helperStyle: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w200,
-                  color: Colors.grey,
-                ),
+                    borderSide: BorderSide(color: Colors.black),
+                  )),
+              borderRadius: BorderRadius.circular(6),
+              value: art,
+              isDense: true,
+              isExpanded: true,
+              icon: Image.asset(
+                "assets/Chevon Left.png",
+                height: 16,
+                width: 16,
               ),
-              focusNode: FocusNode(),
-              autofocus: true,
-              controller: nameController,
+              elevation: 16,
+              style: const TextStyle(color: Colors.deepPurple),
+              onChanged: (String? value) {
+                // This is called when the user selects an item.
+                setState(() {
+                  art = value!;
+                });
+              },
+              items: dropdownItemList
+                  .map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
             ),
           ),
           Container(
@@ -86,7 +103,7 @@ class _SelectGenderState extends State<SelectGender> {
   }
 
   void createProfile() async {
-    if (nameController.text.isEmpty) {
+    if (art.isEmpty) {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text("All Fields are Required")));
     } else {
@@ -94,10 +111,10 @@ class _SelectGenderState extends State<SelectGender> {
           .collection("users")
           .doc(FirebaseAuth.instance.currentUser!.uid)
           .update({
-        "gender": nameController.text,
+        "gender": art,
       }).then((value) => {
-                ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text("Name and Photo Added"))),
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(SnackBar(content: Text("Gender is Added"))),
                 Navigator.pushReplacement(context,
                     MaterialPageRoute(builder: (builder) => MainScreen()))
               });

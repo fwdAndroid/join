@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:join/database/storage_methods.dart';
 import 'package:join/emailprofile.dart/user_dob.dart';
-import 'package:join/main/main_screen.dart';
 import 'package:join/widgets/utils.dart';
 
 class UserPhotoEmail extends StatefulWidget {
@@ -71,7 +70,7 @@ class _UserPhotoEmailState extends State<UserPhotoEmail> {
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: RichText(
                           text: TextSpan(
-                            text: 'Upload photo profile',
+                            text: 'Upload Profile Photo',
                             style: TextStyle(
                               fontFamily: 'ProximaNova',
                               fontWeight: FontWeight.w500,
@@ -120,7 +119,7 @@ class _UserPhotoEmailState extends State<UserPhotoEmail> {
                 border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(6),
                     borderSide: BorderSide(color: Colors.grey)),
-                hintText: "Enter Name",
+                hintText: "Enter Your Name",
                 helperStyle: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w200,

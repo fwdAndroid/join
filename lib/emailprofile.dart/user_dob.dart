@@ -1,13 +1,8 @@
-import 'dart:typed_data';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:join/database/storage_methods.dart';
 import 'package:intl/intl.dart';
 import 'package:join/emailprofile.dart/user_phonenumber.dart';
-import 'package:join/widgets/utils.dart';
 
 class UserDateofBirth extends StatefulWidget {
   const UserDateofBirth({super.key});
@@ -17,7 +12,6 @@ class UserDateofBirth extends StatefulWidget {
 }
 
 class _UserDateofBirthState extends State<UserDateofBirth> {
-  Uint8List? _image;
   TextEditingController nameController = TextEditingController();
   bool _isLoading = false;
   DateTime? _selectedDate;
@@ -97,13 +91,6 @@ class _UserDateofBirthState extends State<UserDateofBirth> {
     );
   }
 
-  selectImage() async {
-    Uint8List ui = await pickImage(ImageSource.gallery);
-    setState(() {
-      _image = ui;
-    });
-  }
-
   _selectDate(BuildContext context) async {
     var newSelectedDate = await showDatePicker(
       context: context,
@@ -134,7 +121,7 @@ class _UserDateofBirthState extends State<UserDateofBirth> {
         "dob": nameController.text,
       }).then((value) => {
                 ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text("Name and Photo Added"))),
+                    SnackBar(content: Text("Date of Birth is Added"))),
                 Navigator.pushReplacement(context,
                     MaterialPageRoute(builder: (builder) => UserPhoneNumber()))
               });
