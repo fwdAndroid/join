@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:join/activities_panel/create.dart';
+import 'package:join/activities_panel/intectualactivities.dart';
+import 'package:join/activities_panel/physicalactivities.dart';
+import 'package:join/activities_panel/relax.dart';
+import 'package:join/activities_panel/sip_together.dart';
 import 'package:join/filters/filters.dart';
 import 'package:join/notification/notiy.dart';
 
@@ -66,10 +71,10 @@ class _WelComePageState extends State<WelComePage> {
               children: [
                 InkWell(
                   onTap: () {
-                    // Navigator.push(
-                    //     context,
-                    //     MaterialPageRoute(
-                    //         builder: (builder) => PhysicalActivities()));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (builder) => PhysicalActivities()));
                   },
                   child: Column(
                     children: [
@@ -90,79 +95,105 @@ class _WelComePageState extends State<WelComePage> {
                     ],
                   ),
                 ),
-                Column(
-                  children: [
-                    Image.asset("assets/pc3.png",
-                        width: 50, height: 50, fit: BoxFit.cover),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Text(
-                      style: TextStyle(
-                          color: Color(0xff160F29).withOpacity(.8),
+                InkWell(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (builder) => IntelacutualActivities()));
+                  },
+                  child: Column(
+                    children: [
+                      Image.asset("assets/pc3.png",
+                          width: 50, height: 50, fit: BoxFit.cover),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        style: TextStyle(
+                            color: Color(0xff160F29).withOpacity(.8),
+                            fontSize: 10,
+                            fontFamily: "ProximaNova",
+                            fontWeight: FontWeight.w600),
+                        "Interllectual\nActivities",
+                        textAlign: TextAlign.center,
+                      )
+                    ],
+                  ),
+                ),
+                InkWell(
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (builder) => SipTogether()));
+                  },
+                  child: Column(
+                    children: [
+                      Image.asset("assets/pc5.png",
+                          width: 50, height: 50, fit: BoxFit.cover),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        style: TextStyle(
+                            color: Color(0xff160F29).withOpacity(.8),
+                            fontSize: 10,
+                            fontFamily: "ProximaNova",
+                            fontWeight: FontWeight.w600),
+                        "Sip\nTogether",
+                        textAlign: TextAlign.center,
+                      )
+                    ],
+                  ),
+                ),
+                InkWell(
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (builder) => Create()));
+                  },
+                  child: Column(
+                    children: [
+                      Image.asset("assets/pc2.png",
+                          width: 50, height: 50, fit: BoxFit.cover),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        style: TextStyle(
                           fontSize: 10,
                           fontFamily: "ProximaNova",
-                          fontWeight: FontWeight.w600),
-                      "Interllectual\nActivities",
-                      textAlign: TextAlign.center,
-                    )
-                  ],
-                ),
-                Column(
-                  children: [
-                    Image.asset("assets/pc5.png",
-                        width: 50, height: 50, fit: BoxFit.cover),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Text(
-                      style: TextStyle(
+                          fontWeight: FontWeight.w600,
                           color: Color(0xff160F29).withOpacity(.8),
+                        ),
+                        "Creative\nActivities",
+                        textAlign: TextAlign.center,
+                      )
+                    ],
+                  ),
+                ),
+                InkWell(
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (builder) => Relaxation()));
+                  },
+                  child: Column(
+                    children: [
+                      Image.asset("assets/pc4.png",
+                          width: 50, height: 50, fit: BoxFit.cover),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
                           fontSize: 10,
                           fontFamily: "ProximaNova",
-                          fontWeight: FontWeight.w600),
-                      "Sip\nTogether",
-                      textAlign: TextAlign.center,
-                    )
-                  ],
-                ),
-                Column(
-                  children: [
-                    Image.asset("assets/pc2.png",
-                        width: 50, height: 50, fit: BoxFit.cover),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Text(
-                      style: TextStyle(
-                        fontSize: 10,
-                        fontFamily: "ProximaNova",
-                        fontWeight: FontWeight.w600,
-                        color: Color(0xff160F29).withOpacity(.8),
-                      ),
-                      "Creative\nActivities",
-                      textAlign: TextAlign.center,
-                    )
-                  ],
-                ),
-                Column(
-                  children: [
-                    Image.asset("assets/pc4.png",
-                        width: 50, height: 50, fit: BoxFit.cover),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Text(
-                      style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 10,
-                        fontFamily: "ProximaNova",
-                        color: Color(0xff160F29).withOpacity(.8),
-                      ),
-                      "Relaxation and\nLeisure Activities",
-                      textAlign: TextAlign.center,
-                    )
-                  ],
+                          color: Color(0xff160F29).withOpacity(.8),
+                        ),
+                        "Relaxation and\nLeisure Activities",
+                        textAlign: TextAlign.center,
+                      )
+                    ],
+                  ),
                 )
               ],
             ),
