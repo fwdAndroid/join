@@ -51,9 +51,9 @@ class _NextActivityPageState extends State<NextActivityPage> {
 
   @override
   Widget build(BuildContext context) {
-    LatLng startLocation = _isLoading
-        ? const LatLng(25.276987, 55.296249)
-        : LatLng(latlong[0], latlong[1]);
+    // LatLng startLocation = _isLoading
+    //     ? const LatLng(25.276987, 55.296249)
+    //     : LatLng(latlong[0], latlong[1]);
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 225, 243, 246),
       resizeToAvoidBottomInset: false,
@@ -114,46 +114,52 @@ class _NextActivityPageState extends State<NextActivityPage> {
                     width: 277,
                     height: 46,
                     child: TextFormField(
-                      onTap: () async {
-                        var place = await PlacesAutocomplete.show(
-                            context: context,
-                            apiKey: googleApikey,
-                            mode: Mode.overlay,
-                            types: [],
-                            strictbounds: false,
-                            components: [Component(Component.country, 'ae')],
-                            //google_map_webservice package
-                            onError: (err) {
-                              print(err);
-                            });
-
-                        if (place != null) {
-                          setState(() {
-                            location = place.description.toString();
-                            searchController.text = location;
-                          });
-                          final plist = GoogleMapsPlaces(
-                            apiKey: googleApikey,
-                            apiHeaders: await GoogleApiHeaders().getHeaders(),
-                            //from google_api_headers package
-                          );
-                          String placeid = place.placeId ?? "0";
-                          final detail =
-                              await plist.getDetailsByPlaceId(placeid);
-                          final geometry = detail.result.geometry!;
-                          final lat = geometry.location.lat;
-                          final lang = geometry.location.lng;
-                          var newlatlang = LatLng(lat, lang);
-                          mapController?.animateCamera(
-                              CameraUpdate.newCameraPosition(CameraPosition(
-                                  target: newlatlang, zoom: 17)));
-                        }
-                      },
+                      onTap: () async {},
                       decoration: InputDecoration(
-                        prefixIcon: Icon(
-                          Icons.search,
-                          color: Colors.grey,
-                        ),
+                        prefixIcon: IconButton(
+                            onPressed: () async {
+                              var place = await PlacesAutocomplete.show(
+                                  context: context,
+                                  apiKey: googleApikey,
+                                  mode: Mode.overlay,
+                                  types: [],
+                                  strictbounds: false,
+                                  // components: [
+                                  //   Component(Component.country, 'ae')
+                                  // ],
+                                  //google_map_webservice package
+                                  onError: (err) {
+                                    print(err);
+                                  });
+
+                              if (place != null) {
+                                setState(() {
+                                  location = place.description.toString();
+                                  searchController.text = location;
+                                });
+                                final plist = GoogleMapsPlaces(
+                                  apiKey: googleApikey,
+                                  apiHeaders:
+                                      await GoogleApiHeaders().getHeaders(),
+                                  //from google_api_headers package
+                                );
+                                String placeid = place.placeId ?? "0";
+                                final detail =
+                                    await plist.getDetailsByPlaceId(placeid);
+                                final geometry = detail.result.geometry!;
+                                final lat = geometry.location.lat;
+                                final lang = geometry.location.lng;
+                                var newlatlang = LatLng(lat, lang);
+                                mapController?.animateCamera(
+                                    CameraUpdate.newCameraPosition(
+                                        CameraPosition(
+                                            target: newlatlang, zoom: 17)));
+                              }
+                            },
+                            icon: Icon(
+                              Icons.search,
+                              color: Colors.grey,
+                            )),
                         filled: true,
                         contentPadding: EdgeInsets.only(top: 10),
                         fillColor: Colors.white,

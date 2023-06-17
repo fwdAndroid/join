@@ -1,15 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:join/activity/geo_service.dart';
-import 'package:join/database/storage_methods.dart';
-import 'package:join/main/main_screen.dart';
-import 'package:uuid/uuid.dart';
 import 'package:flutter_google_places_hoc081098/flutter_google_places_hoc081098.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_api_headers/google_api_headers.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_webservice/places.dart';
+import 'package:uuid/uuid.dart';
+import 'package:join/activity/geo_service.dart';
+import 'package:join/database/storage_methods.dart';
+import 'package:join/main/main_screen.dart';
 
 class MapScreenActivity extends StatefulWidget {
   final starttime;
@@ -182,9 +183,9 @@ class _MapScreenActivityState extends State<MapScreenActivity> {
                                       mode: Mode.overlay,
                                       types: [],
                                       strictbounds: false,
-                                      components: [
-                                        Component(Component.country, 'ae')
-                                      ],
+                                      // components: [
+                                      //   Component(Component.country, 'ae')
+                                      // ],
                                       //google_map_webservice package
                                       onError: (err) {
                                         print(err);
@@ -264,6 +265,9 @@ class _MapScreenActivityState extends State<MapScreenActivity> {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text("All Fields are required")));
     } else {
+      Position position = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.best);
+
       String photoURL = await StorageMethods()
           .uploadImageToStorage('UserPics', widget.image!, true);
 
@@ -275,6 +279,8 @@ class _MapScreenActivityState extends State<MapScreenActivity> {
         "address": _locationController.text,
         "category": widget.cate,
         "photo": photoURL,
+        "latitude": position.latitude,
+        "longitude": position.longitude,
         "date": widget.day,
         "uid": FirebaseAuth.instance.currentUser!.uid,
         "startTime": widget.starttime,
