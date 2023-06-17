@@ -60,136 +60,140 @@ class _PhysicalActivitiesState extends State<PhysicalActivities> {
                     ]),
                 child: Padding(
                   padding: const EdgeInsets.all(4.0),
-                  child: ListTile(
-                    leading: Image.network(
-                      data['photo'].toString(),
-                      fit: BoxFit.cover,
-                      width: 55,
-                      height: 55,
-                    ),
-                    title: Text(
-                      data['title'],
-                      style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xff160F29),
-                          fontSize: 15),
-                    ),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          data['description'],
+                  child: Column(
+                    children: [
+                      ListTile(
+                        leading: Image.network(
+                          data['photo'].toString(),
+                          fit: BoxFit.cover,
+                          width: 55,
+                          height: 55,
+                        ),
+                        title: Text(
+                          data['title'],
                           style: TextStyle(
-                              fontWeight: FontWeight.w400,
-                              color: Color(0xff160F29).withOpacity(.6),
-                              fontSize: 12),
+                              fontWeight: FontWeight.w600,
+                              color: Color(0xff160F29),
+                              fontSize: 15),
                         ),
-                        SizedBox(
-                          height: 7,
-                        ),
-                        Row(
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Image.asset(
-                              "assets/timer.png",
-                              width: 14,
-                              height: 15,
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
                             Text(
-                              data['date'],
+                              data['description'],
                               style: TextStyle(
                                   fontWeight: FontWeight.w400,
                                   color: Color(0xff160F29).withOpacity(.6),
                                   fontSize: 12),
                             ),
                             SizedBox(
-                              width: 5,
+                              height: 7,
                             ),
-                            Text(
-                              data['startTime'],
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w400,
-                                  color: Color(0xff160F29).withOpacity(.6),
-                                  fontSize: 12),
+                            Row(
+                              children: [
+                                Image.asset(
+                                  "assets/timer.png",
+                                  width: 14,
+                                  height: 15,
+                                ),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Text(
+                                  data['date'],
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w400,
+                                      color: Color(0xff160F29).withOpacity(.6),
+                                      fontSize: 12),
+                                ),
+                                SizedBox(
+                                  width: 5,
+                                ),
+                                Text(
+                                  data['startTime'],
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w400,
+                                      color: Color(0xff160F29).withOpacity(.6),
+                                      fontSize: 12),
+                                ),
+                                SizedBox(
+                                  width: 5,
+                                ),
+                                Text(
+                                  "to",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w400,
+                                      color: Color(0xff160F29).withOpacity(.6),
+                                      fontSize: 12),
+                                ),
+                                SizedBox(
+                                  width: 5,
+                                ),
+                                Text(
+                                  data['endTime'],
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w400,
+                                      color: Color(0xff160F29).withOpacity(.6),
+                                      fontSize: 12),
+                                ),
+                              ],
                             ),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            Text(
-                              "to",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w400,
-                                  color: Color(0xff160F29).withOpacity(.6),
-                                  fontSize: 12),
-                            ),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            Text(
-                              data['endTime'],
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w400,
-                                  color: Color(0xff160F29).withOpacity(.6),
-                                  fontSize: 12),
-                            ),
+                            Divider(),
                           ],
                         ),
-                        Divider(),
-                        Row(
-                          children: [
-                            Image.asset(
-                              "assets/g.png",
-                              width: 30,
-                              height: 30,
+                      ),
+                      Row(
+                        children: [
+                          Image.asset(
+                            "assets/g.png",
+                            width: 30,
+                            height: 30,
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Text(
+                            data['address'],
+                            style: TextStyle(
+                                fontWeight: FontWeight.w400,
+                                color: Color(0xff160F29).withOpacity(.6),
+                                fontSize: 10),
+                            overflow: TextOverflow.clip,
+                          ),
+                          Spacer(),
+                        ],
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (builder) => DetailPage(
+                                        address: data['address'],
+                                        date: data['date'],
+                                        statis: data['activitystatus'],
+                                        image: data['photo'],
+                                        title: data['title'],
+                                        desc: data['description'],
+                                        endTime: data['endTime'],
+                                        uuid: data['uuid'],
+                                        location: data['location'],
+                                        startTime: data['startTime'],
+                                      )));
+                        },
+                        child: Text(
+                          "View Details",
+                          style: TextStyle(color: Colors.white, fontSize: 12),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8.0),
                             ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Text(
-                              data['address'],
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w400,
-                                  color: Color(0xff160F29).withOpacity(.6),
-                                  fontSize: 12),
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            Spacer(),
-                            ElevatedButton(
-                              onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (builder) => DetailPage(
-                                              address: data['address'],
-                                              date: data['date'],
-                                              statis: data['activitystatus'],
-                                              image: data['photo'],
-                                              title: data['title'],
-                                              desc: data['description'],
-                                              endTime: data['endTime'],
-                                              uuid: data['uuid'],
-                                              location: data['location'],
-                                              startTime: data['startTime'],
-                                            )));
-                              },
-                              child: Text(
-                                "View Details",
-                                style:
-                                    TextStyle(color: Colors.white, fontSize: 8),
-                              ),
-                              style: ElevatedButton.styleFrom(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8.0),
-                                  ),
-                                  backgroundColor: Color(0xff246A73),
-                                  fixedSize: Size(100, 30)),
-                            )
-                          ],
-                        )
-                      ],
-                    ),
+                            backgroundColor: Color(0xff246A73),
+                            fixedSize:
+                                Size(MediaQuery.of(context).size.width, 30)),
+                      )
+                    ],
                   ),
                 ),
               );
