@@ -86,20 +86,20 @@ class _EditProfileState extends State<EditProfile> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   InkWell(
-                                    onTap: () => selectImage(),
-                                    child: Container(
-                                      margin: EdgeInsets.only(top: 10),
-                                      child: Center(
-                                          child: _image != null
-                                              ? CircleAvatar(
-                                                  radius: 60,
-                                                  backgroundImage:
-                                                      MemoryImage(_image!))
-                                              : CircleAvatar(
-                                                  radius: 60,
-                                                  backgroundImage:
-                                                      NetworkImage(image))),
-                                    ),
+                                    // onTap: () => selectImage(),
+                                    child: _image != null
+                                        ? CircleAvatar(
+                                            radius: 60,
+                                            backgroundImage:
+                                                MemoryImage(_image!))
+                                        : Container(
+                                            margin: EdgeInsets.only(top: 10),
+                                            child: Center(
+                                                child: CircleAvatar(
+                                                    radius: 60,
+                                                    backgroundImage:
+                                                        NetworkImage(image))),
+                                          ),
                                   ),
                                   Container(
                                       margin: EdgeInsets.only(
@@ -169,11 +169,6 @@ class _EditProfileState extends State<EditProfile> {
                                         left: 15, right: 15, top: 5),
                                     child: TextFormField(
                                       keyboardType: TextInputType.text,
-
-                                      // onTap: () {
-                                      //   dateofBrithController.text =
-                                      //       _selectDate(context);
-                                      // },
                                       controller: dateofBrithController,
                                       decoration: InputDecoration(
                                           suffixIcon: Padding(
@@ -253,51 +248,6 @@ class _EditProfileState extends State<EditProfile> {
                                           fillColor: Color(0xffEBF1F3)),
                                     ),
                                   ),
-                                  // Container(
-                                  //     margin: EdgeInsets.only(
-                                  //         left: 15, right: 15, top: 10),
-                                  //     child: Text(
-                                  //       "Phone Number",
-                                  //       style: TextStyle(
-                                  //           fontFamily: "ProximaNova",
-                                  //           fontWeight: FontWeight.w400,
-                                  //           fontSize: 16,
-                                  //           color: Color(0xff736F7F)),
-                                  //     )),
-                                  // Container(
-                                  //   width: 315,
-                                  //   height: 46,
-                                  //   decoration: BoxDecoration(
-                                  //     borderRadius:
-                                  //         BorderRadius.all(Radius.circular(6)),
-                                  //   ),
-                                  //   margin: EdgeInsets.only(
-                                  //       left: 15, right: 15, top: 5),
-                                  //   child: TextFormField(
-                                  //     decoration: InputDecoration(
-                                  //         contentPadding: EdgeInsets.only(
-                                  //             top: 10, left: 10),
-                                  //         hintText: "Add Phone Number",
-                                  //         focusedBorder: OutlineInputBorder(
-                                  //             borderRadius:
-                                  //                 BorderRadius.circular(6),
-                                  //             borderSide: BorderSide(
-                                  //                 color: Color(0xffEBF1F3))),
-                                  //         disabledBorder: OutlineInputBorder(
-                                  //             borderRadius:
-                                  //                 BorderRadius.circular(6),
-                                  //             borderSide: BorderSide(
-                                  //                 color: Color(0xffEBF1F3))),
-                                  //         enabledBorder: OutlineInputBorder(
-                                  //             borderRadius:
-                                  //                 BorderRadius.circular(6),
-                                  //             borderSide: BorderSide(
-                                  //                 color: Color(0xffEBF1F3))),
-                                  //         border: InputBorder.none,
-                                  //         filled: true,
-                                  //         fillColor: Color(0xffEBF1F3)),
-                                  //   ),
-                                  // ),
                                 ],
                               ),
                             ),

@@ -1,7 +1,12 @@
+import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:join/app_setting/app_setting.dart';
+import 'package:join/database/storage_methods.dart';
+import 'package:join/main/main_screen.dart';
+import 'package:join/widgets/utils.dart';
 
 class MyProfile extends StatefulWidget {
   const MyProfile({super.key});
@@ -11,6 +16,8 @@ class MyProfile extends StatefulWidget {
 }
 
 class _MyProfileState extends State<MyProfile> {
+  Uint8List? _image;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -110,36 +117,26 @@ class _MyProfileState extends State<MyProfile> {
                           }
                           var document = snapshot.data;
                           return Container(
-                            height: 70,
-                            width: 70,
+                            height: 80,
+                            width: 80,
                             child: Stack(
                               alignment: Alignment.center,
                               children: [
-                                Align(
-                                  alignment: Alignment.center,
-                                  child: Container(
-                                    height: 61,
-                                    width: 61,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(30),
-                                      // gradient: LinearGradient(
-                                      //   begin: Alignment(
-                                      //     1,
-                                      //     0.83,
-                                      //   ),
-                                      //   end: Alignment(
-                                      //     0.16,
-                                      //     0.2,
-                                      //   ),
-                                      //   colors: [
-                                      //     ColorConstant.redA100,
-                                      //     ColorConstant.red300,
-                                      //   ],
-                                      // ),
-                                    ),
-                                    child: CircleAvatar(
-                                      backgroundImage: NetworkImage(
-                                          document['photo'].toString()),
+                                InkWell(
+                                  onTap: selectImage,
+                                  child: Align(
+                                    alignment: Alignment.center,
+                                    child: Container(
+                                      height: 61,
+                                      width: 61,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(30),
+                                      ),
+                                      child: CircleAvatar(
+                                        radius: 80,
+                                        backgroundImage: NetworkImage(
+                                            document['photo'].toString()),
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -147,6 +144,12 @@ class _MyProfileState extends State<MyProfile> {
                             ),
                           );
                         }),
+                    TextButton(
+                        onPressed: dialog,
+                        child: Text(
+                          "Update Image",
+                          style: TextStyle(color: Color(0xff246A73)),
+                        )),
                     Padding(
                       padding: EdgeInsets.only(
                         top: 19,
@@ -271,5 +274,54 @@ class _MyProfileState extends State<MyProfile> {
             )
           ],
         ))));
+  }
+
+  selectImage() async {
+    Uint8List ui = await pickImage(ImageSource.gallery);
+    setState(() {
+      _image = ui;
+    });
+  }
+
+  void dialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Update Image'),
+          content: const SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('Do you want to update your profile image'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Yes'),
+              onPressed: () async {
+                String photoURL = await StorageMethods()
+                    .uploadImageToStorage('ProfilePics', _image!, false);
+                FirebaseFirestore.instance
+                    .collection("users")
+                    .doc(FirebaseAuth.instance.currentUser!.uid)
+                    .update({"photo": photoURL});
+                ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text("Image Updated Succesfully")));
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (builder) => MainScreen()));
+              },
+            ),
+            TextButton(
+              child: const Text('No'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }
