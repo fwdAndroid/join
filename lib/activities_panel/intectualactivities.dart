@@ -148,7 +148,7 @@ class _IntelacutualActivitiesState extends State<IntelacutualActivities> {
                               width: 10,
                             ),
                             Text(
-                              data['location'],
+                              data['address'],
                               style: TextStyle(
                                   fontWeight: FontWeight.w400,
                                   color: Color(0xff160F29).withOpacity(.6),
@@ -163,6 +163,7 @@ class _IntelacutualActivitiesState extends State<IntelacutualActivities> {
                                     MaterialPageRoute(
                                         builder: (builder) => DetailPage(
                                               date: data['date'],
+                                              address: data['address'],
                                               image: data['photo'],
                                               statis: data['activitystatus'],
                                               title: data['title'],

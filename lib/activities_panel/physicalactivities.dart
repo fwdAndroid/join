@@ -148,7 +148,7 @@ class _PhysicalActivitiesState extends State<PhysicalActivities> {
                               width: 10,
                             ),
                             Text(
-                              data['location'],
+                              data['address'],
                               style: TextStyle(
                                   fontWeight: FontWeight.w400,
                                   color: Color(0xff160F29).withOpacity(.6),
@@ -162,6 +162,7 @@ class _PhysicalActivitiesState extends State<PhysicalActivities> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (builder) => DetailPage(
+                                              address: data['address'],
                                               date: data['date'],
                                               statis: data['activitystatus'],
                                               image: data['photo'],

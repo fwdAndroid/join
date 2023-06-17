@@ -148,7 +148,7 @@ class _RelaxationState extends State<Relaxation> {
                               width: 10,
                             ),
                             Text(
-                              data['location'],
+                              data['address'],
                               style: TextStyle(
                                   fontWeight: FontWeight.w400,
                                   color: Color(0xff160F29).withOpacity(.6),
@@ -167,6 +167,7 @@ class _RelaxationState extends State<Relaxation> {
                                               image: data['photo'],
                                               title: data['title'],
                                               desc: data['description'],
+                                              address: data['address'],
                                               endTime: data['endTime'],
                                               uuid: data['uuid'],
                                               location: data['location'],

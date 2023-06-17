@@ -148,7 +148,7 @@ class _SipTogetherState extends State<SipTogether> {
                               width: 10,
                             ),
                             Text(
-                              data['location'],
+                              data['address'],
                               style: TextStyle(
                                   fontWeight: FontWeight.w400,
                                   color: Color(0xff160F29).withOpacity(.6),
@@ -166,6 +166,7 @@ class _SipTogetherState extends State<SipTogether> {
                                               image: data['photo'],
                                               statis: data['activitystatus'],
                                               title: data['title'],
+                                              address: data['address'],
                                               desc: data['description'],
                                               endTime: data['endTime'],
                                               uuid: data['uuid'],

@@ -8,6 +8,7 @@ class DetailPage extends StatefulWidget {
   final endTime;
   final location;
   final startTime;
+  final address;
   final desc;
   final uuid;
   final date;
@@ -24,6 +25,7 @@ class DetailPage extends StatefulWidget {
     required this.endTime,
     required this.uuid,
     required this.location,
+    required this.address,
     required this.startTime,
   });
 
@@ -219,7 +221,7 @@ class _DetailPageState extends State<DetailPage> {
                               fontWeight: FontWeight.w600),
                         ),
                         Text(
-                          widget.location,
+                          widget.address,
                           style: TextStyle(
                               color: Colors.black,
                               fontSize: 14,

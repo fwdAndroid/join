@@ -148,7 +148,7 @@ class _CreateState extends State<Create> {
                               width: 10,
                             ),
                             Text(
-                              data['location'],
+                              data['address'],
                               style: TextStyle(
                                   fontWeight: FontWeight.w400,
                                   color: Color(0xff160F29).withOpacity(.6),
@@ -169,6 +169,7 @@ class _CreateState extends State<Create> {
                                               desc: data['description'],
                                               endTime: data['endTime'],
                                               uuid: data['uuid'],
+                                              address: data['address'],
                                               location: data['location'],
                                               startTime: data['startTime'],
                                             )));
