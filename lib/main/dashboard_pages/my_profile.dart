@@ -138,8 +138,8 @@ class _MyProfileState extends State<MyProfile> {
                                       // ),
                                     ),
                                     child: CircleAvatar(
-                                      backgroundImage:
-                                          NetworkImage(document['photo']),
+                                      backgroundImage: NetworkImage(
+                                          document['photo'].toString()),
                                     ),
                                   ),
                                 ),
