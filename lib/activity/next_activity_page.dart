@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_google_places_hoc081098/flutter_google_places_hoc081098.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:google_api_headers/google_api_headers.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:google_maps_webservice/places.dart';
+
 import 'package:intl/intl.dart';
 import 'package:join/activity/map_screen_activity.dart';
 
@@ -25,9 +31,29 @@ class _NextActivityPageState extends State<NextActivityPage> {
   TextEditingController startTimeController = TextEditingController();
   TextEditingController endTimeController = TextEditingController();
   DateTime? _selectedDate;
+  String googleApikey = "AIzaSyBffT8plN_Vdcd308KgmzIfGVQN6q-CkAo";
+  GoogleMapController? mapController; //contrller for Google map
+  CameraPosition? cameraPosition;
+  bool _isLoading = false;
+  List latlong = [];
+  String location = 'Please move map to A specific location.';
+  @override
+  void initState() {
+    getLatLong();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    LatLng startLocation = _isLoading
+        ? const LatLng(25.276987, 55.296249)
+        : LatLng(latlong[0], latlong[1]);
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 225, 243, 246),
       resizeToAvoidBottomInset: false,
@@ -88,6 +114,41 @@ class _NextActivityPageState extends State<NextActivityPage> {
                     width: 277,
                     height: 46,
                     child: TextFormField(
+                      onTap: () async {
+                        var place = await PlacesAutocomplete.show(
+                            context: context,
+                            apiKey: googleApikey,
+                            mode: Mode.overlay,
+                            types: [],
+                            strictbounds: false,
+                            components: [Component(Component.country, 'ae')],
+                            //google_map_webservice package
+                            onError: (err) {
+                              print(err);
+                            });
+
+                        if (place != null) {
+                          setState(() {
+                            location = place.description.toString();
+                            searchController.text = location;
+                          });
+                          final plist = GoogleMapsPlaces(
+                            apiKey: googleApikey,
+                            apiHeaders: await GoogleApiHeaders().getHeaders(),
+                            //from google_api_headers package
+                          );
+                          String placeid = place.placeId ?? "0";
+                          final detail =
+                              await plist.getDetailsByPlaceId(placeid);
+                          final geometry = detail.result.geometry!;
+                          final lat = geometry.location.lat;
+                          final lang = geometry.location.lng;
+                          var newlatlang = LatLng(lat, lang);
+                          mapController?.animateCamera(
+                              CameraUpdate.newCameraPosition(CameraPosition(
+                                  target: newlatlang, zoom: 17)));
+                        }
+                      },
                       decoration: InputDecoration(
                         prefixIcon: Icon(
                           Icons.search,
@@ -386,18 +447,28 @@ class _NextActivityPageState extends State<NextActivityPage> {
   }
 
   void createProfile() async {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (builder) => MapScreenActivity(
-                  cate: widget.cate,
-                  title: widget.title,
-                  desc: widget.description,
-                  image: widget.image,
-                  starttime: startTimeController.text,
-                  endtime: endTimeController.text,
-                  day: createDateController.text,
-                  search: searchController.text,
-                )));
+    if (searchController.text.isEmpty ||
+        endTimeController.text.isEmpty ||
+        endTimeController.text.isEmpty ||
+        createDateController.text.isEmpty) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('All Fields are required')));
+    } else {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (builder) => MapScreenActivity(
+                    cate: widget.cate,
+                    title: widget.title,
+                    desc: widget.description,
+                    image: widget.image,
+                    starttime: startTimeController.text,
+                    endtime: endTimeController.text,
+                    day: createDateController.text,
+                    search: searchController.text,
+                  )));
+    }
   }
+
+  void getLatLong() {}
 }
