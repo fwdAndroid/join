@@ -1,24 +1,20 @@
-// import 'package:college_meet/Screens/authphone/selectinterest.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:join/status/phonestatus/checkphonestatus.dart';
-
-import 'package:pin_code_fields/pin_code_fields.dart';
+import 'package:pinput/pinput.dart';
 
 class VerifyPhone extends StatefulWidget {
   final String phone;
   final String codeDigits;
-  const VerifyPhone({Key? key, required this.codeDigits, required this.phone})
-      : super(key: key);
+  VerifyPhone({required this.phone, required this.codeDigits});
 
   @override
   State<VerifyPhone> createState() => _VerifyPhoneState();
 }
 
 class _VerifyPhoneState extends State<VerifyPhone> {
-  final GlobalKey<ScaffoldState> _scalfoldkey = GlobalKey<ScaffoldState>();
   final TextEditingController controllerpin = TextEditingController();
-  final FocusNode pinOTPFocusNode = FocusNode();
+  final FocusNode pinVerifyPhonePFocusNode = FocusNode();
 
   String? verificationCode;
 
@@ -31,52 +27,66 @@ class _VerifyPhoneState extends State<VerifyPhone> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: _scalfoldkey,
-      backgroundColor: Colors.white,
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Image.asset(
-            "assets/splash.png",
-            width: 150,
-            height: 200,
-          ),
-          SizedBox(
-            height: 20,
-          ),
-          Text(
-            "OTP Verification",
-            style: TextStyle(
-                color: Colors.black, fontWeight: FontWeight.bold, fontSize: 25),
-          ),
-          SizedBox(
-            height: 6,
-          ),
-          Text("verification: ${widget.codeDigits}-${widget.phone}"),
-          SizedBox(height: 50),
-          Padding(
-              padding:
-                  const EdgeInsets.symmetric(vertical: 8.0, horizontal: 30),
-              child: PinCodeTextField(
-                focusNode: pinOTPFocusNode,
-                controller: controllerpin,
-                appContext: context,
-                pastedTextStyle: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                ),
+    final defaultPinTheme = PinTheme(
+      width: 56,
+      height: 56,
+      textStyle: TextStyle(
+          fontSize: 20,
+          color: Color.fromRGBO(30, 60, 87, 1),
+          fontWeight: FontWeight.w600),
+      decoration: BoxDecoration(
+        border: Border.all(color: Color.fromRGBO(234, 239, 243, 1)),
+        borderRadius: BorderRadius.circular(20),
+      ),
+    );
+
+    final focusedPinTheme = defaultPinTheme.copyDecorationWith(
+      border: Border.all(color: Color.fromRGBO(114, 178, 238, 1)),
+      borderRadius: BorderRadius.circular(8),
+    );
+
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(
+              'assets/splash.png',
+              height: 100,
+              width: 200,
+            ),
+            SizedBox(
+              height: 30,
+            ),
+            Container(
+              child: InkWell(
+                child:
+                    Text("verification: ${widget.codeDigits}-${widget.phone}"),
+              ),
+            ),
+            SizedBox(
+              height: 30,
+            ),
+            Container(
+              margin: EdgeInsets.only(left: 20, right: 20, bottom: 20, top: 20),
+              child: Pinput(
                 length: 6,
-                onSubmitted: (pin) async {
+                focusNode: pinVerifyPhonePFocusNode,
+                controller: controllerpin,
+                defaultPinTheme: defaultPinTheme,
+                focusedPinTheme: focusedPinTheme,
+                onCompleted: (pin) async {
                   try {
                     await FirebaseAuth.instance
                         .signInWithCredential(PhoneAuthProvider.credential(
                             verificationId: verificationCode!, smsCode: pin))
-                        .then((value) async {
+                        .then((value) {
                       if (value.user != null) {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (builder) => CheckPhoneStatus()));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (ctx) => CheckPhoneStatus()));
                       }
                     });
                   } catch (e) {
@@ -87,46 +97,30 @@ class _VerifyPhoneState extends State<VerifyPhone> {
                     ));
                   }
                 },
-                animationType: AnimationType.fade,
-                validator: (v) {
-                  if (v!.length < 3) {
-                    return "I'm from validator";
-                  } else {
-                    return null;
-                  }
-                },
-                pinTheme: PinTheme(),
-                animationDuration: const Duration(milliseconds: 300),
-                keyboardType: TextInputType.number,
-                onCompleted: (v) {
-                  debugPrint("Completed");
-                },
-                onChanged: (value) {
-                  debugPrint(value);
-                  setState(() {});
-                },
-                beforeTextPaste: (text) {
-                  debugPrint("Allowing to paste $text");
-                  //if you return true then it will show the paste confirmation dialog. Otherwise if false, then nothing will happen.
-                  //but you can show anything you want here, like your pop up saying wrong paste format or etc
-                  return true;
-                },
-              )),
-          SizedBox(height: 60),
-          Container(
-            margin: EdgeInsets.only(bottom: 20),
-            child: ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (builder) => CheckPhoneStatus()));
-                },
-                child: Text('Continue'),
-                style: ElevatedButton.styleFrom(
-                    shape: StadiumBorder(),
-                    primary: Color(0xfff0092E1),
-                    fixedSize: Size(330, 50))),
-          ),
-        ],
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.only(top: 20, bottom: 20),
+              child: Text(
+                'Please enter the 6-digit code \n  sent to your number',
+                style: TextStyle(color: Colors.black),
+                textAlign: TextAlign.center,
+              ),
+            ),
+            SizedBox(
+              height: 30,
+            ),
+
+            // TextButton(
+            //   child: Text("Continue"),
+            //   onPressed: (() {
+            //     addPhone();
+            // Navigator.of(context).push(
+            //     MaterialPageRoute(builder: (builder) => ProfileDetail()));
+            //   }),
+            // )
+          ],
+        ),
       ),
     );
   }
@@ -141,7 +135,10 @@ class _VerifyPhoneState extends State<VerifyPhone> {
             if (value.user != null) {
               // Customdialog.showDialogBox(context);
               Navigator.of(context).push(
-                  MaterialPageRoute(builder: (builder) => CheckPhoneStatus()));
+                MaterialPageRoute(
+                  builder: (builder) => CheckPhoneStatus(),
+                ),
+              );
               // Customdialog.closeDialog(context);
             } else {}
           });
@@ -167,7 +164,7 @@ class _VerifyPhoneState extends State<VerifyPhone> {
   }
 
   // void addPhone() async {
-  //   await DatabaseMethods().numberAdd();
+  //   await DatabaseMethods().phone();
   //   // .then((value) => Customdialog.closeDialog(context));
   // }
 }
