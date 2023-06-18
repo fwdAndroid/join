@@ -202,7 +202,7 @@ class _MyProfileState extends State<MyProfile> {
                                   fontSize: 10),
                             )),
                         SizedBox(
-                          width: 10,
+                          width: 7,
                         ),
                         ElevatedButton.icon(
                             style: ElevatedButton.styleFrom(
