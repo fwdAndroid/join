@@ -1,9 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:join/activities_panel/create.dart';
 import 'package:join/activities_panel/intectualactivities.dart';
 import 'package:join/activities_panel/physicalactivities.dart';
 import 'package:join/activities_panel/relax.dart';
 import 'package:join/activities_panel/sip_together.dart';
+import 'package:join/activity/geo_service.dart';
 import 'package:join/filters/filters.dart';
 import 'package:join/notification/notiy.dart';
 
@@ -15,6 +19,55 @@ class WelComePage extends StatefulWidget {
 }
 
 class _WelComePageState extends State<WelComePage> {
+  String googleApikey = "AIzaSyBffT8plN_Vdcd308KgmzIfGVQN6q-CkAo";
+  GoogleMapController? mapController; //contrller for Google map
+  CameraPosition? cameraPosition;
+  bool _isLoading = false;
+  List latlong = [];
+  String location = 'Please move map to A specific location.';
+  TextEditingController _locationController = TextEditingController();
+  @override
+  void initState() {
+    fetchLocationData();
+
+    getLatLong();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    //  searchController.dispose();
+    super.dispose();
+  }
+
+  void getLatLong() async {
+    setState(() {
+      _isLoading = true;
+    });
+    latlong = await getLocation().getLatLong();
+    setState(() {
+      latlong;
+      _isLoading = false;
+    });
+  }
+
+  List<Marker> markers = [];
+
+  Future<void> fetchLocationData() async {
+    QuerySnapshot querySnapshot =
+        await FirebaseFirestore.instance.collection('activity').get();
+    setState(() {
+      markers = querySnapshot.docs.map((doc) {
+        double latitude = doc['latitude'];
+        double longitude = doc['longitude'];
+        return Marker(
+          markerId: MarkerId(doc.id),
+          position: LatLng(latitude, longitude),
+        );
+      }).toList();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -204,24 +257,79 @@ class _WelComePageState extends State<WelComePage> {
         height: 600,
         child: Stack(
           children: [
-            Image.asset(
-              "assets/map.png",
-              fit: BoxFit.cover,
-              height: 600,
+            GoogleMap(
+              onMapCreated: (GoogleMapController controller) {
+                mapController = controller;
+              },
+              initialCameraPosition: CameraPosition(
+                target: LatLng(0, 0), // Initial map center
+                zoom: 10, // Initial zoom level
+              ),
+              markers: Set<Marker>.of(markers),
             ),
-            InkWell(
-              onTap: _showMyDialog,
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                child: Container(
-                  margin: EdgeInsets.only(bottom: 80),
-                  height: 34,
-                  width: 94,
-                  decoration: BoxDecoration(
-                    color: Colors.black,
-                    borderRadius: BorderRadius.circular(34),
-                  ),
-                  child: Center(
+
+            // GoogleMap(
+            //   //Map widget from google_maps_flutter package
+            //   zoomGesturesEnabled: true, //enable Zoom in, out on map
+            //   initialCameraPosition: CameraPosition(
+            //     //innital position in map
+            //     target: LatLng(0, 0), //initial position
+            //     zoom: 14.0, //initial zoom level
+            //   ),
+            //   markers: Set<Marker>.of(markers),
+            //   mapType: MapType.normal, //map type
+            //   onMapCreated: (controller) {
+            //     //method called when map is created
+            //     setState(() {
+            //       mapController = controller;
+            //     });
+            //   },
+            //   onCameraMove: (CameraPosition cameraPositiona) {
+            //     cameraPosition = cameraPositiona; //when map is dragging
+            //   },
+            //   onCameraIdle: () async {
+            //     List<Placemark> addresses = await placemarkFromCoordinates(
+            //         cameraPosition!.target.latitude,
+            //         cameraPosition!.target.longitude);
+
+            //     var first = addresses.first;
+            //     print("${first.name} : ${first..administrativeArea}");
+
+            //     List<Placemark> placemarks = await placemarkFromCoordinates(
+            //         cameraPosition!.target.latitude,
+            //         cameraPosition!.target.longitude);
+            //     Placemark place = placemarks[0];
+            //     location =
+            //         '${place.street},${place.subLocality},${place.locality},${place.thoroughfare},';
+
+            //     setState(() {
+            //       //get place name from lat and lang
+            //       // print(address);
+            //       _locationController.text = location;
+            //     });
+            //   },
+            // ),
+            // Center(
+            //   //picker image on google map
+            //   child: Image.asset(
+            //     "assets/user_loc.png",
+            //     width: 30,
+            //     height: 30,
+            //   ),
+            // ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                margin: EdgeInsets.only(bottom: 80),
+                height: 34,
+                width: 94,
+                decoration: BoxDecoration(
+                  color: Colors.black,
+                  borderRadius: BorderRadius.circular(34),
+                ),
+                child: Center(
+                  child: TextButton(
+                    onPressed: _showMyDialog,
                     child: Text(
                       "List View",
                       textAlign: TextAlign.center,
