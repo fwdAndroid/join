@@ -177,6 +177,7 @@ class _SipTogetherState extends State<SipTogether> {
                                         desc: data['description'],
                                         endTime: data['endTime'],
                                         uuid: data['uuid'],
+                                        createid: data['uid'],
                                         location: data['location'],
                                         startTime: data['startTime'],
                                       )));

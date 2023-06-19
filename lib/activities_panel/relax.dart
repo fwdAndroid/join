@@ -175,6 +175,7 @@ class _RelaxationState extends State<Relaxation> {
                                         title: data['title'],
                                         desc: data['description'],
                                         endTime: data['endTime'],
+                                        createid: data['uid'],
                                         uuid: data['uuid'],
                                         location: data['location'],
                                         startTime: data['startTime'],

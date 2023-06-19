@@ -171,6 +171,7 @@ class _PhysicalActivitiesState extends State<PhysicalActivities> {
                                   builder: (builder) => DetailPage(
                                         address: data['address'],
                                         date: data['date'],
+                                        createid: data['uid'],
                                         statis: data['activitystatus'],
                                         image: data['photo'],
                                         title: data['title'],

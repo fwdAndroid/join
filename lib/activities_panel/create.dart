@@ -173,6 +173,7 @@ class _CreateState extends State<Create> {
                                         date: data['date'],
                                         statis: data['activitystatus'],
                                         image: data['photo'],
+                                        createid: data['uid'],
                                         title: data['title'],
                                         desc: data['description'],
                                         endTime: data['endTime'],

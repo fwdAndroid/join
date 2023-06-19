@@ -11,6 +11,7 @@ class DetailPage extends StatefulWidget {
   final address;
   final desc;
   final uuid;
+  final createid;
   final date;
   final title;
   final image;
@@ -23,6 +24,7 @@ class DetailPage extends StatefulWidget {
     required this.statis,
     required this.desc,
     required this.endTime,
+    required this.createid,
     required this.uuid,
     required this.location,
     required this.address,
@@ -309,10 +311,11 @@ class _DetailPageState extends State<DetailPage> {
                                       "date": widget.date,
                                       "image": widget.image,
                                       "desc": widget.desc,
-                                      "creator": document['name'],
-                                      "uid": FirebaseAuth
-                                          .instance.currentUser!.uid,
-                                      "currentuuid": uuid
+                                      "joinname": document['name'],
+                                      "creatorid": widget.createid,
+                                      "currentuuid": uuid,
+                                      "joinid":
+                                          FirebaseAuth.instance.currentUser!.uid
                                     }).then(
                                       (value) => {
                                         ScaffoldMessenger.of(context)

@@ -24,7 +24,7 @@ class _CheckStatusState extends State<CheckStatus> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: CircularProgressIndicator(),
+        child: Text("Loading Please Wait"),
       ),
     );
   }

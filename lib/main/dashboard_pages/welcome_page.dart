@@ -1,5 +1,8 @@
+import 'dart:typed_data';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:join/activities_panel/create.dart';
@@ -26,11 +29,15 @@ class _WelComePageState extends State<WelComePage> {
   List latlong = [];
   String location = 'Please move map to A specific location.';
   TextEditingController _locationController = TextEditingController();
+  BitmapDescriptor? customMarkerIcon;
+
   @override
   void initState() {
     fetchLocationData();
 
     getLatLong();
+    loadCustomMarkerIcon();
+
     super.initState();
   }
 
@@ -51,6 +58,16 @@ class _WelComePageState extends State<WelComePage> {
     });
   }
 
+  Future<void> loadCustomMarkerIcon() async {
+    final String markerIconPath = 'assets/user_loc.png';
+    final ByteData byteData = await rootBundle.load(markerIconPath);
+    final Uint8List byteList = byteData.buffer.asUint8List();
+
+    setState(() {
+      customMarkerIcon = BitmapDescriptor.fromBytes(byteList);
+    });
+  }
+
   List<Marker> markers = [];
 
   Future<void> fetchLocationData() async {
@@ -63,6 +80,7 @@ class _WelComePageState extends State<WelComePage> {
         return Marker(
           markerId: MarkerId(doc.id),
           position: LatLng(latitude, longitude),
+          icon: customMarkerIcon!,
         );
       }).toList();
     });
@@ -70,6 +88,9 @@ class _WelComePageState extends State<WelComePage> {
 
   @override
   Widget build(BuildContext context) {
+    LatLng startLocation = _isLoading
+        ? const LatLng(25.276987, 55.296249)
+        : LatLng(latlong[0], latlong[1]);
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size(MediaQuery.of(context).size.width, 182),
@@ -258,65 +279,46 @@ class _WelComePageState extends State<WelComePage> {
         child: Stack(
           children: [
             GoogleMap(
-              onMapCreated: (GoogleMapController controller) {
-                mapController = controller;
-              },
+              //Map widget from google_maps_flutter package
+              zoomGesturesEnabled: true, //enable Zoom in, out on map
               initialCameraPosition: CameraPosition(
-                target: LatLng(0, 0), // Initial map center
-                zoom: 10, // Initial zoom level
+                //innital position in map
+                target: startLocation, //initial position
+                zoom: 14.0, //initial zoom level
               ),
               markers: Set<Marker>.of(markers),
+              mapType: MapType.normal, //map type
+              onMapCreated: (controller) {
+                //method called when map is created
+                setState(() {
+                  mapController = controller;
+                });
+              },
+              onCameraMove: (CameraPosition cameraPositiona) {
+                cameraPosition = cameraPositiona; //when map is dragging
+              },
+              onCameraIdle: () async {
+                List<Placemark> addresses = await placemarkFromCoordinates(
+                    cameraPosition!.target.latitude,
+                    cameraPosition!.target.longitude);
+
+                var first = addresses.first;
+                print("${first.name} : ${first..administrativeArea}");
+
+                List<Placemark> placemarks = await placemarkFromCoordinates(
+                    cameraPosition!.target.latitude,
+                    cameraPosition!.target.longitude);
+                Placemark place = placemarks[0];
+                location =
+                    '${place.street},${place.subLocality},${place.locality},${place.thoroughfare},';
+
+                setState(() {
+                  //get place name from lat and lang
+                  // print(address);
+                  _locationController.text = location;
+                });
+              },
             ),
-
-            // GoogleMap(
-            //   //Map widget from google_maps_flutter package
-            //   zoomGesturesEnabled: true, //enable Zoom in, out on map
-            //   initialCameraPosition: CameraPosition(
-            //     //innital position in map
-            //     target: LatLng(0, 0), //initial position
-            //     zoom: 14.0, //initial zoom level
-            //   ),
-            //   markers: Set<Marker>.of(markers),
-            //   mapType: MapType.normal, //map type
-            //   onMapCreated: (controller) {
-            //     //method called when map is created
-            //     setState(() {
-            //       mapController = controller;
-            //     });
-            //   },
-            //   onCameraMove: (CameraPosition cameraPositiona) {
-            //     cameraPosition = cameraPositiona; //when map is dragging
-            //   },
-            //   onCameraIdle: () async {
-            //     List<Placemark> addresses = await placemarkFromCoordinates(
-            //         cameraPosition!.target.latitude,
-            //         cameraPosition!.target.longitude);
-
-            //     var first = addresses.first;
-            //     print("${first.name} : ${first..administrativeArea}");
-
-            //     List<Placemark> placemarks = await placemarkFromCoordinates(
-            //         cameraPosition!.target.latitude,
-            //         cameraPosition!.target.longitude);
-            //     Placemark place = placemarks[0];
-            //     location =
-            //         '${place.street},${place.subLocality},${place.locality},${place.thoroughfare},';
-
-            //     setState(() {
-            //       //get place name from lat and lang
-            //       // print(address);
-            //       _locationController.text = location;
-            //     });
-            //   },
-            // ),
-            // Center(
-            //   //picker image on google map
-            //   child: Image.asset(
-            //     "assets/user_loc.png",
-            //     width: 30,
-            //     height: 30,
-            //   ),
-            // ),
             Align(
               alignment: Alignment.bottomCenter,
               child: Container(

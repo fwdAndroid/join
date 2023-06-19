@@ -170,6 +170,7 @@ class _IntelacutualActivitiesState extends State<IntelacutualActivities> {
                               MaterialPageRoute(
                                   builder: (builder) => DetailPage(
                                         address: data['address'],
+                                        createid: data['uid'],
                                         date: data['date'],
                                         statis: data['activitystatus'],
                                         image: data['photo'],
