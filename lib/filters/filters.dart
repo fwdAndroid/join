@@ -59,7 +59,7 @@ class _FiltersState extends State<Filters> {
                   min: 1,
                   max: 150,
                   divisions: 100,
-                  activeColor: Colors.purple,
+                  activeColor: Color(0xff246A73),
                   inactiveColor: Colors.grey,
                   label: '${valueHolder.round()}',
                   onChanged: (double newValue) {
@@ -88,7 +88,7 @@ class _FiltersState extends State<Filters> {
                   min: 1,
                   max: 150,
                   divisions: 100,
-                  activeColor: Colors.purple,
+                  activeColor: Color(0xff246A73),
                   inactiveColor: Colors.grey,
                   label: '${valueHolder.round()}',
                   onChanged: (double newValue) {
@@ -144,7 +144,7 @@ class _FiltersState extends State<Filters> {
                   min: 1,
                   max: 150,
                   divisions: 100,
-                  activeColor: Colors.purple,
+                  activeColor: Color(0xff246A73),
                   inactiveColor: Colors.grey,
                   label: '${valueHolder.round()}',
                   onChanged: (double newValue) {

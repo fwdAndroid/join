@@ -12,8 +12,6 @@ class EventsChat extends StatefulWidget {
 }
 
 class _EventsChatState extends State<EventsChat> {
-  final Stream<QuerySnapshot> _usersStream =
-      FirebaseFirestore.instance.collection('chats').snapshots();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
