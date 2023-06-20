@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:join/activities_details/calenders_details.dart';
 
 class OnGoing extends StatefulWidget {
   OnGoing({
@@ -142,6 +143,36 @@ class _OnGoingState extends State<OnGoing> {
                           ),
                         ],
                       ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                                fixedSize: Size(343, 50),
+                                backgroundColor: Color(0xff246A73)),
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (builder) => CalendersDetails(
+                                            createrId: data['creatorid'],
+                                            date: data['date'],
+                                            desc: data['desc'],
+                                            endTime: data['endTime'],
+                                            image: data['image'],
+                                            joinid: data['joinid'],
+                                            joinname: data['joinname'],
+                                            startTime: data['startTime'],
+                                            title: data['title'],
+                                          )));
+                            },
+                            child: Text(
+                              "View Event Details",
+                              style: TextStyle(color: Colors.white),
+                            )),
+                      )
                     ],
                   )),
             );
