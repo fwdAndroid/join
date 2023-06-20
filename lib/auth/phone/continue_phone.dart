@@ -71,17 +71,17 @@ class _ContinuePhoneState extends State<ContinuePhone> {
                             dialCodeDigits = country.dialCode!;
                           });
                         },
-                        initialSelection: "PK",
+                        initialSelection: "TH",
                         showCountryOnly: false,
                         showOnlyCountryWhenClosed: false,
-                        favorite: ["+92", "PAK"]),
+                        favorite: ["+66", "TH"]),
                     Expanded(
                       child: Container(
                         child: TextFormField(
                           validator: RequiredValidator(errorText: "Required"),
                           decoration: InputDecoration(
                             border: InputBorder.none,
-                            hintText: "3070684743",
+                            hintText: "12345678",
                             //  prefix: Padding(padding: EdgeInsets.all(10),child: Text(dialCodeDigits,style: TextStyle(color: Colors.black),),),
                           ),
                           keyboardType: TextInputType.number,
