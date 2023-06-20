@@ -1,6 +1,12 @@
+import 'dart:async';
+import 'dart:typed_data';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:join/activities_details/detail.page.dart';
+import 'package:flutter/services.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:join/activity/geo_service.dart';
 
 class Create extends StatefulWidget {
   const Create({super.key});
@@ -10,13 +16,77 @@ class Create extends StatefulWidget {
 }
 
 class _CreateState extends State<Create> {
-  final Stream<QuerySnapshot> _usersStream = FirebaseFirestore.instance
-      .collection('activity')
-      .where("activity", isEqualTo: "Creative Activities")
-      .snapshots();
+  String googleApikey = "AIzaSyBffT8plN_Vdcd308KgmzIfGVQN6q-CkAo";
+  GoogleMapController? mapController; //contrller for Google map
+  CameraPosition? cameraPosition;
+  bool _isLoading = false;
+  List latlong = [];
+  String location = 'Please move map to A specific location.';
+  TextEditingController _locationController = TextEditingController();
+  BitmapDescriptor? customMarkerIcon;
+
+  @override
+  void initState() {
+    fetchLocationData();
+
+    getLatLong();
+    loadCustomMarkerIcon();
+
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    //  searchController.dispose();
+    super.dispose();
+  }
+
+  void getLatLong() async {
+    setState(() {
+      _isLoading = true;
+    });
+    latlong = await getLocation().getLatLong();
+    setState(() {
+      latlong;
+      _isLoading = false;
+    });
+  }
+
+  Future<void> loadCustomMarkerIcon() async {
+    final String markerIconPath = 'assets/user_loc.png';
+    final ByteData byteData = await rootBundle.load(markerIconPath);
+    final Uint8List byteList = byteData.buffer.asUint8List();
+
+    setState(() {
+      customMarkerIcon = BitmapDescriptor.fromBytes(byteList);
+    });
+  }
+
+  List<Marker> markers = [];
+
+  Future<void> fetchLocationData() async {
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('activity')
+        .where("activity", isEqualTo: "Creative Activities")
+        .get();
+    setState(() {
+      markers = querySnapshot.docs.map((doc) {
+        double latitude = doc['latitude'];
+        double longitude = doc['longitude'];
+        return Marker(
+          markerId: MarkerId(doc.id),
+          position: LatLng(latitude, longitude),
+          icon: customMarkerIcon!,
+        );
+      }).toList();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    LatLng startLocation = _isLoading
+        ? const LatLng(51.1657, 10.4515)
+        : LatLng(latlong[0], latlong[1]);
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 225, 243, 246),
       appBar: AppBar(
@@ -32,174 +102,45 @@ class _CreateState extends State<Create> {
           overflow: TextOverflow.ellipsis,
         ),
       ),
-      body: StreamBuilder<QuerySnapshot>(
-        stream: _usersStream,
-        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (snapshot.hasError) {
-            return Text('Something went wrong');
-          }
+      body: GoogleMap(
+        //Map widget from google_maps_flutter package
+        zoomGesturesEnabled: true, //enable Zoom in, out on map
+        initialCameraPosition: CameraPosition(
+          //innital position in map
+          target: startLocation, //initial position
+          zoom: 14.0, //initial zoom level
+        ),
+        markers: Set<Marker>.of(markers),
+        mapType: MapType.normal, //map type
+        onMapCreated: (controller) {
+          //method called when map is created
+          setState(() {
+            mapController = controller;
+          });
+        },
+        onCameraMove: (CameraPosition cameraPositiona) {
+          cameraPosition = cameraPositiona; //when map is dragging
+        },
+        onCameraIdle: () async {
+          List<Placemark> addresses = await placemarkFromCoordinates(
+              cameraPosition!.target.latitude,
+              cameraPosition!.target.longitude);
 
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Text("Loading");
-          }
+          var first = addresses.first;
+          print("${first.name} : ${first..administrativeArea}");
 
-          return ListView(
-            children: snapshot.data!.docs.map((DocumentSnapshot document) {
-              Map<String, dynamic> data =
-                  document.data()! as Map<String, dynamic>;
-              return Container(
-                margin: EdgeInsets.only(left: 10, right: 10, top: 8),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                          color: Colors.grey,
-                          offset: Offset(0, 0),
-                          blurRadius: 0.5)
-                    ]),
-                child: Padding(
-                  padding: const EdgeInsets.all(4.0),
-                  child: Column(
-                    children: [
-                      ListTile(
-                        leading: Image.network(
-                          data['photo'].toString(),
-                          fit: BoxFit.cover,
-                          width: 55,
-                          height: 55,
-                        ),
-                        title: Text(
-                          data['title'],
-                          style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              color: Color(0xff160F29),
-                              fontSize: 15),
-                        ),
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              data['description'],
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w400,
-                                  color: Color(0xff160F29).withOpacity(.6),
-                                  fontSize: 12),
-                            ),
-                            SizedBox(
-                              height: 7,
-                            ),
-                            Row(
-                              children: [
-                                Image.asset(
-                                  "assets/timer.png",
-                                  width: 14,
-                                  height: 15,
-                                ),
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                Text(
-                                  data['date'],
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w400,
-                                      color: Color(0xff160F29).withOpacity(.6),
-                                      fontSize: 12),
-                                ),
-                                SizedBox(
-                                  width: 5,
-                                ),
-                                Text(
-                                  data['startTime'],
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w400,
-                                      color: Color(0xff160F29).withOpacity(.6),
-                                      fontSize: 12),
-                                ),
-                                SizedBox(
-                                  width: 5,
-                                ),
-                                Text(
-                                  "to",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w400,
-                                      color: Color(0xff160F29).withOpacity(.6),
-                                      fontSize: 12),
-                                ),
-                                SizedBox(
-                                  width: 5,
-                                ),
-                                Text(
-                                  data['endTime'],
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w400,
-                                      color: Color(0xff160F29).withOpacity(.6),
-                                      fontSize: 12),
-                                ),
-                              ],
-                            ),
-                            Divider(),
-                          ],
-                        ),
-                      ),
-                      Row(
-                        children: [
-                          Image.asset(
-                            "assets/g.png",
-                            width: 30,
-                            height: 30,
-                          ),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Text(
-                            data['address'],
-                            style: TextStyle(
-                                fontWeight: FontWeight.w400,
-                                color: Color(0xff160F29).withOpacity(.6),
-                                fontSize: 10),
-                            overflow: TextOverflow.clip,
-                          ),
-                          Spacer(),
-                        ],
-                      ),
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (builder) => DetailPage(
-                                        address: data['address'],
-                                        date: data['date'],
-                                        statis: data['activitystatus'],
-                                        image: data['photo'],
-                                        createid: data['uid'],
-                                        title: data['title'],
-                                        desc: data['description'],
-                                        endTime: data['endTime'],
-                                        uuid: data['uuid'],
-                                        location: data['location'],
-                                        startTime: data['startTime'],
-                                      )));
-                        },
-                        child: Text(
-                          "View Details",
-                          style: TextStyle(color: Colors.white, fontSize: 12),
-                        ),
-                        style: ElevatedButton.styleFrom(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                            backgroundColor: Color(0xff246A73),
-                            fixedSize:
-                                Size(MediaQuery.of(context).size.width, 30)),
-                      )
-                    ],
-                  ),
-                ),
-              );
-            }).toList(),
-          );
+          List<Placemark> placemarks = await placemarkFromCoordinates(
+              cameraPosition!.target.latitude,
+              cameraPosition!.target.longitude);
+          Placemark place = placemarks[0];
+          location =
+              '${place.street},${place.subLocality},${place.locality},${place.thoroughfare},';
+
+          setState(() {
+            //get place name from lat and lang
+            // print(address);
+            _locationController.text = location;
+          });
         },
       ),
     );
