@@ -294,6 +294,7 @@ class _CreateActivityState extends State<CreateActivity> {
                           left: 1,
                         ),
                         child: SwitchListTile(
+                          activeColor: Color(0xffFF6F79),
                           value: switchValue1,
                           onChanged: (bool? value) {
                             setState(() {
@@ -333,6 +334,7 @@ class _CreateActivityState extends State<CreateActivity> {
                           left: 1,
                         ),
                         child: SwitchListTile(
+                          activeColor: Color(0xffFF6F79),
                           value: switchValue2,
                           onChanged: (bool? value) {
                             setState(() {
@@ -372,6 +374,7 @@ class _CreateActivityState extends State<CreateActivity> {
                           left: 1,
                         ),
                         child: SwitchListTile(
+                          activeColor: Color(0xffFF6F79),
                           value: switchValue3,
                           onChanged: (bool? value) {
                             setState(() {

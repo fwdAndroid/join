@@ -19,13 +19,11 @@ class MapScreenActivity extends StatefulWidget {
   final desc;
   final cate;
   final day;
-  final search;
   final image;
   const MapScreenActivity(
       {super.key,
       required this.cate,
       required this.day,
-      required this.search,
       required this.title,
       required this.desc,
       required this.endtime,
@@ -275,7 +273,6 @@ class _MapScreenActivityState extends State<MapScreenActivity> {
         "title": widget.title,
         "uuid": uuid,
         "description": widget.desc,
-        "location": widget.search,
         "address": _locationController.text,
         "category": widget.cate,
         "photo": photoURL,
