@@ -103,7 +103,7 @@ class _WelComePageState extends State<WelComePage> {
   @override
   Widget build(BuildContext context) {
     LatLng startLocation = _isLoading
-        ? const LatLng(25.276987, 55.296249)
+        ? const LatLng(51.1657, 10.4515)
         : LatLng(latlong[0], latlong[1]);
     return Scaffold(
       appBar: PreferredSize(
@@ -311,27 +311,27 @@ class _WelComePageState extends State<WelComePage> {
               onCameraMove: (CameraPosition cameraPositiona) {
                 cameraPosition = cameraPositiona; //when map is dragging
               },
-              // onCameraIdle: () async {
-              //   List<Placemark> addresses = await placemarkFromCoordinates(
-              //       cameraPosition!.target.latitude,
-              //       cameraPosition!.target.longitude);
+              onCameraIdle: () async {
+                List<Placemark> addresses = await placemarkFromCoordinates(
+                    cameraPosition!.target.latitude,
+                    cameraPosition!.target.longitude);
 
-              //   var first = addresses.first;
-              //   print("${first.name} : ${first..administrativeArea}");
+                var first = addresses.first;
+                print("${first.name} : ${first..administrativeArea}");
 
-              //   List<Placemark> placemarks = await placemarkFromCoordinates(
-              //       cameraPosition!.target.latitude,
-              //       cameraPosition!.target.longitude);
-              //   Placemark place = placemarks[0];
-              //   location =
-              //       '${place.street},${place.subLocality},${place.locality},${place.thoroughfare},';
+                List<Placemark> placemarks = await placemarkFromCoordinates(
+                    cameraPosition!.target.latitude,
+                    cameraPosition!.target.longitude);
+                Placemark place = placemarks[0];
+                location =
+                    '${place.street},${place.subLocality},${place.locality},${place.thoroughfare},';
 
-              //   setState(() {
-              //     //get place name from lat and lang
-              //     // print(address);
-              //     _locationController.text = location;
-              //   });
-              // },
+                setState(() {
+                  //get place name from lat and lang
+                  // print(address);
+                  _locationController.text = location;
+                });
+              },
             ),
             Align(
               alignment: Alignment.bottomCenter,

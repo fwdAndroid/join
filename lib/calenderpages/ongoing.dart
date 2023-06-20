@@ -53,20 +53,25 @@ class _OnGoingState extends State<OnGoing> {
                         height: 100,
                         child: Stack(
                           children: [
-                            Image.network(
-                              data['image'],
-                              height: 100,
-                              fit: BoxFit.cover,
-                              width: MediaQuery.of(context).size.width,
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: Image.network(
+                                data['image'],
+                                height: 100,
+                                fit: BoxFit.cover,
+                                width: MediaQuery.of(context).size.width,
+                              ),
                             ),
-                            Align(
-                              alignment: Alignment.topRight,
-                              child: IconButton(
-                                  onPressed: () {},
-                                  icon: Icon(
-                                    Icons.share,
-                                    color: Colors.black,
-                                  )),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Align(
+                                alignment: Alignment.topRight,
+                                child: Image.asset(
+                                  "assets/whiteshare.png",
+                                  height: 30,
+                                  width: 30,
+                                ),
+                              ),
                             )
                           ],
                         ),
@@ -74,105 +79,84 @@ class _OnGoingState extends State<OnGoing> {
                       SizedBox(
                         height: 10,
                       ),
-                      Text(
-                        data['title'],
-                        style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            color: Color(0xff160F29),
-                            fontSize: 16),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 4.0),
+                        child: Text(
+                          data['title'],
+                          style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              color: Color(0xff160F29),
+                              fontSize: 16),
+                        ),
                       ),
                       SizedBox(
                         height: 5,
                       ),
-                      Text(
-                        data['desc'],
-                        style: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            color: Color(0xff160F29).withOpacity(.6),
-                            fontSize: 12),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 4.0),
+                        child: Text(
+                          data['desc'],
+                          style: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              color: Color(0xff160F29).withOpacity(.6),
+                              fontSize: 12),
+                        ),
                       ),
                       SizedBox(
                         height: 6,
                       ),
-                      Row(
-                        children: [
-                          Image.asset(
-                            "assets/timer.png",
-                            width: 14,
-                            height: 15,
-                          ),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Text(
-                            data['date'],
-                            style: TextStyle(
-                                fontWeight: FontWeight.w400,
-                                color: Color(0xff160F29).withOpacity(.6),
-                                fontSize: 12),
-                          ),
-                          SizedBox(
-                            width: 5,
-                          ),
-                          Text(
-                            data['startTime'],
-                            style: TextStyle(
-                                fontWeight: FontWeight.w400,
-                                color: Color(0xff160F29).withOpacity(.6),
-                                fontSize: 12),
-                          ),
-                          SizedBox(
-                            width: 5,
-                          ),
-                          Text(
-                            "to",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w400,
-                                color: Color(0xff160F29).withOpacity(.6),
-                                fontSize: 12),
-                          ),
-                          SizedBox(
-                            width: 5,
-                          ),
-                          Text(
-                            data['endTime'],
-                            style: TextStyle(
-                                fontWeight: FontWeight.w400,
-                                color: Color(0xff160F29).withOpacity(.6),
-                                fontSize: 12),
-                          ),
-                        ],
-                      ),
                       Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                                fixedSize: Size(343, 50),
-                                backgroundColor: Color(0xff246A73)),
-                            onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (builder) => CalendersDetails(
-                                            createrId: data['creatorid'],
-                                            date: data['date'],
-                                            desc: data['desc'],
-                                            endTime: data['endTime'],
-                                            image: data['image'],
-                                            joinid: data['joinid'],
-                                            joinname: data['joinname'],
-                                            startTime: data['startTime'],
-                                            title: data['title'],
-                                          )));
-                            },
-                            child: Text(
-                              "View Event Details",
-                              style: TextStyle(color: Colors.white),
-                            )),
-                      )
+                        padding: const EdgeInsets.only(left: 4.0),
+                        child: Row(
+                          children: [
+                            Image.asset(
+                              "assets/timer.png",
+                              width: 14,
+                              height: 15,
+                            ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Text(
+                              data['date'],
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w400,
+                                  color: Color(0xff160F29).withOpacity(.6),
+                                  fontSize: 12),
+                            ),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Text(
+                              data['startTime'],
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w400,
+                                  color: Color(0xff160F29).withOpacity(.6),
+                                  fontSize: 12),
+                            ),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Text(
+                              "to",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w400,
+                                  color: Color(0xff160F29).withOpacity(.6),
+                                  fontSize: 12),
+                            ),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Text(
+                              data['endTime'],
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w400,
+                                  color: Color(0xff160F29).withOpacity(.6),
+                                  fontSize: 12),
+                            ),
+                          ],
+                        ),
+                      ),
                     ],
                   )),
             );
@@ -182,3 +166,18 @@ class _OnGoingState extends State<OnGoing> {
     );
   }
 }
+// }
+// Navigator.push(
+//                                   context,
+//                                   MaterialPageRoute(
+//                                       builder: (builder) => CalendersDetails(
+//                                             createrId: data['creatorid'],
+//                                             date: data['date'],
+//                                             desc: data['desc'],
+//                                             endTime: data['endTime'],
+//                                             image: data['image'],
+//                                             joinid: data['joinid'],
+//                                             joinname: data['joinname'],
+//                                             startTime: data['startTime'],
+//                                             title: data['title'],
+//                                           )));
