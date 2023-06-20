@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:join/auth/login_screen.dart';
+import 'package:join/main/dashboard_pages/welcome_page.dart';
 import 'package:page_transition/page_transition.dart';
 
 Future<void> main() async {

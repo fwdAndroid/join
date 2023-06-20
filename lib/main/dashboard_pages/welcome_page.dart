@@ -1,9 +1,11 @@
+import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:join/activities_panel/create.dart';
 import 'package:join/activities_panel/intectualactivities.dart';
@@ -30,9 +32,21 @@ class _WelComePageState extends State<WelComePage> {
   String location = 'Please move map to A specific location.';
   TextEditingController _locationController = TextEditingController();
   BitmapDescriptor? customMarkerIcon;
+  final Completer<GoogleMapController> _completer = Completer();
 
   @override
   void initState() {
+    getUserCurrentLocation().then((value) async {
+      print(value.latitude);
+      markers.add(Marker(
+          markerId: MarkerId("2"),
+          position: LatLng(value.latitude, value.longitude)));
+      CameraPosition cameraPosition = CameraPosition(
+          target: LatLng(value.latitude, value.longitude), zoom: 14);
+      final GoogleMapController controller = await _completer.future;
+      controller.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
+      setState(() {});
+    });
     fetchLocationData();
 
     getLatLong();
@@ -297,27 +311,27 @@ class _WelComePageState extends State<WelComePage> {
               onCameraMove: (CameraPosition cameraPositiona) {
                 cameraPosition = cameraPositiona; //when map is dragging
               },
-              onCameraIdle: () async {
-                List<Placemark> addresses = await placemarkFromCoordinates(
-                    cameraPosition!.target.latitude,
-                    cameraPosition!.target.longitude);
+              // onCameraIdle: () async {
+              //   List<Placemark> addresses = await placemarkFromCoordinates(
+              //       cameraPosition!.target.latitude,
+              //       cameraPosition!.target.longitude);
 
-                var first = addresses.first;
-                print("${first.name} : ${first..administrativeArea}");
+              //   var first = addresses.first;
+              //   print("${first.name} : ${first..administrativeArea}");
 
-                List<Placemark> placemarks = await placemarkFromCoordinates(
-                    cameraPosition!.target.latitude,
-                    cameraPosition!.target.longitude);
-                Placemark place = placemarks[0];
-                location =
-                    '${place.street},${place.subLocality},${place.locality},${place.thoroughfare},';
+              //   List<Placemark> placemarks = await placemarkFromCoordinates(
+              //       cameraPosition!.target.latitude,
+              //       cameraPosition!.target.longitude);
+              //   Placemark place = placemarks[0];
+              //   location =
+              //       '${place.street},${place.subLocality},${place.locality},${place.thoroughfare},';
 
-                setState(() {
-                  //get place name from lat and lang
-                  // print(address);
-                  _locationController.text = location;
-                });
-              },
+              //   setState(() {
+              //     //get place name from lat and lang
+              //     // print(address);
+              //     _locationController.text = location;
+              //   });
+              // },
             ),
             Align(
               alignment: Alignment.bottomCenter,
@@ -519,5 +533,14 @@ class _WelComePageState extends State<WelComePage> {
         );
       },
     );
+  }
+
+  Future<Position> getUserCurrentLocation() async {
+    await Geolocator.requestPermission()
+        .then((value) {})
+        .onError((error, stackTrace) {
+      print("error" + error.toString());
+    });
+    return await Geolocator.getCurrentPosition();
   }
 }
