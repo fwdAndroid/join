@@ -21,108 +21,88 @@ class _MyProfileState extends State<MyProfile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          title: Text(
-            "My Profile",
-            style: TextStyle(
-                fontFamily: "ProximaNova",
-                fontSize: 20,
-                color: Color(0xff160F29),
-                fontWeight: FontWeight.w600),
-          ),
-          centerTitle: true,
-          actions: [
-            InkWell(
-              onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (builder) => AppSetting()));
-              },
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Image.asset("assets/set.png"),
-              ),
-            )
-          ],
+      backgroundColor: Color.fromARGB(255, 225, 243, 246),
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: Text(
+          "My Profile",
+          style: TextStyle(
+              fontFamily: "ProximaNova",
+              fontSize: 20,
+              color: Color(0xff160F29),
+              fontWeight: FontWeight.w600),
         ),
-        body: SizedBox(
-            child: SingleChildScrollView(
-                child: Stack(
-          alignment: Alignment.topCenter,
-          children: [
-            Align(
-              alignment: Alignment.center,
-              child: Container(
-                // decoration: AppDecoration.fillBluegray70014,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Container(
-                      height: 216,
-                      width: double.maxFinite,
-                      margin: EdgeInsets.only(
-                        bottom: 1206,
-                      ),
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment(
-                            1,
-                            0.83,
-                          ),
-                          end: Alignment(
-                            0.16,
-                            0.2,
-                          ),
-                          colors: [
-                            Color(0xff368f8b),
-                            Color(0xffff6e78),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+        centerTitle: true,
+        actions: [
+          InkWell(
+            onTap: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (builder) => AppSetting()));
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Image.asset("assets/set.png"),
             ),
-            Align(
-              alignment: Alignment.topCenter,
-              child: Container(
-                margin: EdgeInsets.only(
-                  left: 16,
-                  top: 20,
-                  right: 16,
+          )
+        ],
+      ),
+      body: Column(
+        children: [
+          Container(
+            height: 250,
+            child: Stack(
+              children: [
+                Container(
+                  height: 200,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment(
+                        1,
+                        0.83,
+                      ),
+                      end: Alignment(
+                        0.16,
+                        0.2,
+                      ),
+                      colors: [
+                        Color(0xff368f8b),
+                        Color(0xffff6e78),
+                      ],
+                    ),
+                  ),
                 ),
-                padding: EdgeInsets.only(
-                  left: 52,
-                  top: 22,
-                  right: 52,
-                  bottom: 22,
-                ),
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10)),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    StreamBuilder(
-                        stream: FirebaseFirestore.instance
-                            .collection("users")
-                            .doc(FirebaseAuth.instance.currentUser!.uid)
-                            .snapshots(),
-                        builder: (context, AsyncSnapshot snapshot) {
-                          if (!snapshot.hasData) {
-                            return new CircularProgressIndicator();
-                          }
-                          var document = snapshot.data;
-                          return Container(
-                            height: 80,
-                            width: 80,
-                            child: Stack(
-                              alignment: Alignment.center,
-                              children: [
-                                InkWell(
+                Center(
+                  child: Container(
+                    margin: EdgeInsets.only(left: 16, right: 16, top: 60),
+                    alignment: Alignment.center,
+                    height: 170,
+                    width: 300,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                              offset: Offset(0, 0),
+                              color: Colors.grey,
+                              blurRadius: 2)
+                        ]),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        StreamBuilder(
+                            stream: FirebaseFirestore.instance
+                                .collection("users")
+                                .doc(FirebaseAuth.instance.currentUser!.uid)
+                                .snapshots(),
+                            builder: (context, AsyncSnapshot snapshot) {
+                              if (!snapshot.hasData) {
+                                return new CircularProgressIndicator();
+                              }
+                              var document = snapshot.data;
+                              return Container(
+                                margin: EdgeInsets.only(top: 10),
+                                child: InkWell(
                                   onTap: selectImage,
                                   child: Align(
                                     alignment: Alignment.center,
@@ -140,140 +120,162 @@ class _MyProfileState extends State<MyProfile> {
                                     ),
                                   ),
                                 ),
-                              ],
-                            ),
-                          );
-                        }),
-                    TextButton(
-                        onPressed: dialog,
-                        child: Text(
-                          "Update Image",
-                          style: TextStyle(color: Color(0xff246A73)),
-                        )),
-                    Padding(
-                      padding: EdgeInsets.only(
-                        top: 19,
-                      ),
-                      child: StreamBuilder(
-                          stream: FirebaseFirestore.instance
-                              .collection("users")
-                              .doc(FirebaseAuth.instance.currentUser!.uid)
-                              .snapshots(),
-                          builder: (context, AsyncSnapshot snapshot) {
-                            if (!snapshot.hasData) {
-                              return new CircularProgressIndicator();
-                            }
-                            var document = snapshot.data;
-                            return Text(
-                              document['name'],
-                              overflow: TextOverflow.ellipsis,
-                              textAlign: TextAlign.left,
-                              style: TextStyle(
-                                  color: Color(0xff160F29),
-                                  fontWeight: FontWeight.w600,
-                                  fontFamily: "ProximaNova",
-                                  fontSize: 18),
-                            );
-                          }),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Row(
-                      children: [
-                        ElevatedButton.icon(
-                            style: ElevatedButton.styleFrom(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12.0),
-                                ),
-                                backgroundColor: Color(0xff246A73),
-                                fixedSize: Size(115, 48)),
-                            onPressed: () {},
-                            icon: Image.asset(
-                              "assets/scan.png",
-                              height: 20,
-                            ),
-                            label: Text(
-                              "QR CODE",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontFamily: "ProximaNova",
-                                  fontWeight: FontWeight.w800,
-                                  fontSize: 10),
+                              );
+                            }),
+                        TextButton(
+                            onPressed: dialog,
+                            child: Text(
+                              "Update Image",
+                              style: TextStyle(color: Color(0xff246A73)),
                             )),
-                        SizedBox(
-                          width: 7,
+                        Padding(
+                          padding: EdgeInsets.only(
+                            top: 8,
+                          ),
+                          child: StreamBuilder(
+                              stream: FirebaseFirestore.instance
+                                  .collection("users")
+                                  .doc(FirebaseAuth.instance.currentUser!.uid)
+                                  .snapshots(),
+                              builder: (context, AsyncSnapshot snapshot) {
+                                if (!snapshot.hasData) {
+                                  return new CircularProgressIndicator();
+                                }
+                                var document = snapshot.data;
+                                return Text(
+                                  document['name'],
+                                  overflow: TextOverflow.ellipsis,
+                                  textAlign: TextAlign.left,
+                                  style: TextStyle(
+                                      color: Color(0xff160F29),
+                                      fontWeight: FontWeight.w600,
+                                      fontFamily: "ProximaNova",
+                                      fontSize: 18),
+                                );
+                              }),
                         ),
-                        ElevatedButton.icon(
-                            style: ElevatedButton.styleFrom(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12.0),
-                                ),
-                                backgroundColor: Color(0xffFF7E87),
-                                fixedSize: Size(100, 48)),
-                            onPressed: () {},
-                            icon: Image.asset(
-                              "assets/sss.png",
-                              height: 20,
-                            ),
-                            label: Text(
-                              "Scan",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w800,
-                                  fontFamily: "ProximaNova",
-                                  fontSize: 10),
-                            ))
+                        SizedBox(
+                          height: 10,
+                        ),
                       ],
-                    )
-                  ],
-                ),
-              ),
-            ),
-            Container(
-              height: 104,
-              margin: EdgeInsets.only(top: 290, left: 10, right: 10),
-              child: Card(
-                child: ListTile(
-                  leading: Image.asset("assets/errors.png"),
-                  title: Text(
-                    "No Connection Yet!",
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                      fontFamily: "ProximaNova",
-                    ),
-                  ),
-                  subtitle: Text(
-                    "Meet other users and scan their QR Codes to connect.",
-                    style: TextStyle(
-                      fontWeight: FontWeight.w400,
-                      fontSize: 14,
-                      fontFamily: "ProximaNova",
                     ),
                   ),
                 ),
-              ),
+              ],
             ),
-            Container(
-              height: 104,
-              margin: EdgeInsets.only(top: 400, left: 10, right: 10),
-              child: Card(
-                child: ListTile(
-                  leading: Image.asset("assets/phone.png"),
-                  title: Text(
-                    "No invite yet!",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-                  ),
-                  subtitle: Text(
-                    "Invite your friend and experience the events in your area together.",
-                    style: TextStyle(fontWeight: FontWeight.w400, fontSize: 14),
+          ),
+          Container(
+            decoration: BoxDecoration(
+                color: Colors.white, borderRadius: BorderRadius.circular(6)),
+            height: 119,
+            width: 343,
+            // padding: EdgeInsets.only(top: 16, left: 16, right: 16),
+            margin: EdgeInsets.only(top: 10, left: 10, right: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                SizedBox(
+                  width: 10,
+                ),
+                Image.asset(
+                  "assets/errors.png",
+                  height: 58,
+                  width: 58,
+                  fit: BoxFit.cover,
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                Container(
+                  width: 210,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "No Connection Yet!",
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.w600),
+                      ),
+                      Text(
+                        "Meet other users and scan their QR Codes to connect.",
+                        style: TextStyle(
+                            fontWeight: FontWeight.w400, fontSize: 14),
+                      ),
+                    ],
                   ),
                 ),
-              ),
-            )
-          ],
-        ))));
+                Container(
+                  width: 24,
+                  height: 24,
+                  margin: EdgeInsets.only(top: 20),
+                  child: Align(
+                    alignment: Alignment.topRight,
+                    child: Text(
+                      "",
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
+          Container(
+              decoration: BoxDecoration(
+                  color: Colors.white, borderRadius: BorderRadius.circular(6)),
+              height: 119,
+              width: 343,
+              // padding: EdgeInsets.only(top: 16, left: 16, right: 16),
+              margin: EdgeInsets.only(top: 10, left: 10, right: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Image.asset(
+                    "assets/phone.png",
+                    height: 58,
+                    width: 58,
+                    fit: BoxFit.cover,
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Container(
+                    width: 210,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "No invite yet!",
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.w600),
+                        ),
+                        Text(
+                          "Invite your friend and experience the events in your area together.",
+                          style: TextStyle(
+                              fontWeight: FontWeight.w400, fontSize: 14),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(top: 20, right: 10),
+                    child: Align(
+                      alignment: Alignment.topRight,
+                      child: Image.asset(
+                        "assets/greenshare.png",
+                        width: 24,
+                        height: 24,
+                      ),
+                    ),
+                  )
+                ],
+              )),
+        ],
+      ),
+    );
   }
 
   selectImage() async {
@@ -299,7 +301,12 @@ class _MyProfileState extends State<MyProfile> {
           ),
           actions: <Widget>[
             TextButton(
-              child: const Text('Yes'),
+              child: const Text(
+                'Yes',
+                style: TextStyle(
+                  color: Colors.black,
+                ),
+              ),
               onPressed: () async {
                 String photoURL = await StorageMethods()
                     .uploadImageToStorage('ProfilePics', _image!, false);
@@ -314,7 +321,12 @@ class _MyProfileState extends State<MyProfile> {
               },
             ),
             TextButton(
-              child: const Text('No'),
+              child: const Text(
+                'No',
+                style: TextStyle(
+                  color: Colors.black,
+                ),
+              ),
               onPressed: () {
                 Navigator.of(context).pop();
               },
