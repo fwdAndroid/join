@@ -14,7 +14,7 @@ class ContinuePhone extends StatefulWidget {
 class _ContinuePhoneState extends State<ContinuePhone> {
   final formKey = GlobalKey<FormState>();
 
-  String dialCodeDigits = "+92";
+  String dialCodeDigits = "+66";
   TextEditingController _controller = TextEditingController();
   @override
   Widget build(BuildContext context) {

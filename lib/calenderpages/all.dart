@@ -12,7 +12,7 @@ class All extends StatefulWidget {
 
 class _AllState extends State<All> {
   final Stream<QuerySnapshot> _usersStream =
-      FirebaseFirestore.instance.collection('calenders').snapshots();
+      FirebaseFirestore.instance.collection('activity').snapshots();
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
@@ -46,99 +46,143 @@ class _AllState extends State<All> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Container(
-                        height: 100,
-                        child: Stack(
-                          children: [
-                            Image.network(
-                              data['image'],
-                              height: 100,
-                              fit: BoxFit.cover,
-                              width: MediaQuery.of(context).size.width,
-                            ),
-                            Align(
-                              alignment: Alignment.topRight,
-                              child: IconButton(
-                                  onPressed: () {},
-                                  icon: Icon(
-                                    Icons.share,
-                                    color: Colors.black,
-                                  )),
-                            )
-                          ],
+                      InkWell(
+                        onTap: () {
+                          //  Navigator.push(context, MaterialPageRoute(builder: (builder) => DetailPage(date: date, image: image, title: title, statis: statis, desc: desc, endTime: endTime, createid: createid, uuid: uuid, location: location, address: address, startTime: startTime)))
+                        },
+                        child: Container(
+                          height: 100,
+                          child: Stack(
+                            children: [
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: Image.network(
+                                  data['photo'],
+                                  height: 100,
+                                  fit: BoxFit.cover,
+                                  width: MediaQuery.of(context).size.width,
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Align(
+                                  alignment: Alignment.topRight,
+                                  child: Image.asset(
+                                    "assets/whiteshare.png",
+                                    height: 30,
+                                    width: 30,
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
                         ),
                       ),
                       SizedBox(
                         height: 10,
                       ),
-                      Text(
-                        data['title'],
-                        style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            color: Color(0xff160F29),
-                            fontSize: 16),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 4.0),
+                        child: Text(
+                          data['title'],
+                          style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              color: Color(0xff160F29),
+                              fontSize: 16),
+                        ),
                       ),
                       SizedBox(
                         height: 5,
                       ),
-                      Text(
-                        data['desc'],
-                        style: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            color: Color(0xff160F29).withOpacity(.6),
-                            fontSize: 12),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 4.0),
+                        child: Text(
+                          data['description'],
+                          style: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              color: Color(0xff160F29).withOpacity(.6),
+                              fontSize: 12),
+                        ),
                       ),
                       SizedBox(
                         height: 6,
                       ),
-                      Row(
-                        children: [
-                          Image.asset(
-                            "assets/timer.png",
-                            width: 14,
-                            height: 15,
-                          ),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Text(
-                            data['date'],
-                            style: TextStyle(
-                                fontWeight: FontWeight.w400,
-                                color: Color(0xff160F29).withOpacity(.6),
-                                fontSize: 12),
-                          ),
-                          SizedBox(
-                            width: 5,
-                          ),
-                          Text(
-                            data['startTime'],
-                            style: TextStyle(
-                                fontWeight: FontWeight.w400,
-                                color: Color(0xff160F29).withOpacity(.6),
-                                fontSize: 12),
-                          ),
-                          SizedBox(
-                            width: 5,
-                          ),
-                          Text(
-                            "to",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w400,
-                                color: Color(0xff160F29).withOpacity(.6),
-                                fontSize: 12),
-                          ),
-                          SizedBox(
-                            width: 5,
-                          ),
-                          Text(
-                            data['endTime'],
-                            style: TextStyle(
-                                fontWeight: FontWeight.w400,
-                                color: Color(0xff160F29).withOpacity(.6),
-                                fontSize: 12),
-                          ),
-                        ],
+                      Padding(
+                        padding: const EdgeInsets.only(left: 4.0),
+                        child: Row(
+                          children: [
+                            Image.asset(
+                              "assets/timer.png",
+                              width: 14,
+                              height: 15,
+                            ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Text(
+                              data['date'],
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w400,
+                                  color: Color(0xff160F29).withOpacity(.6),
+                                  fontSize: 12),
+                            ),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Text(
+                              data['startTime'],
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w400,
+                                  color: Color(0xff160F29).withOpacity(.6),
+                                  fontSize: 12),
+                            ),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Text(
+                              "to",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w400,
+                                  color: Color(0xff160F29).withOpacity(.6),
+                                  fontSize: 12),
+                            ),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Text(
+                              data['endTime'],
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w400,
+                                  color: Color(0xff160F29).withOpacity(.6),
+                                  fontSize: 12),
+                            ),
+                            Spacer(),
+                            Container(
+                              width: 64,
+                              height: 20,
+                              decoration: BoxDecoration(
+                                color: Color(0xff246A73).withOpacity(.10),
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(2.0),
+                                child: Center(
+                                  child: Text(
+                                    data['numberofjoiners'].toString() +
+                                        '  Going',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w400,
+                                        color: Color(0xff246A73),
+                                        fontSize: 12),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              width: 5,
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   )),

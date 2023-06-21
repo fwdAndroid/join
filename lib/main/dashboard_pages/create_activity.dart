@@ -411,23 +411,7 @@ class _CreateActivityState extends State<CreateActivity> {
                       ),
                       fixedSize: Size(343, 48),
                       backgroundColor: Color(0xff246A73)),
-                  onPressed: () {
-                    if (createTitleController.text.isEmpty ||
-                        descriptiontextController.text.isEmpty) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text("All Fields are Required")));
-                    } else {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (builder) => NextActivityPage(
-                                    title: createTitleController.text,
-                                    image: _image,
-                                    description: descriptiontextController.text,
-                                    cate: art,
-                                  )));
-                    }
-                  },
+                  onPressed: dialog,
                   child: Text(
                     "Next",
                     style: TextStyle(color: Colors.white, fontSize: 20),
@@ -444,5 +428,61 @@ class _CreateActivityState extends State<CreateActivity> {
     setState(() {
       _image = ui;
     });
+  }
+
+  void dialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: const SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('Do you want to continue ?'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text(
+                'Yes',
+                style: TextStyle(color: Colors.black),
+              ),
+              onPressed: () {
+                if (createTitleController.text.isEmpty) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("Title is Required")));
+                  Navigator.pop(context);
+                } else if (descriptiontextController.text.isEmpty) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("Description is Required")));
+                  Navigator.pop(context);
+                } else {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (builder) => NextActivityPage(
+                                title: createTitleController.text,
+                                image: _image,
+                                description: descriptiontextController.text,
+                                cate: art,
+                              )));
+                }
+              },
+            ),
+            TextButton(
+              child: const Text(
+                'No',
+                style: TextStyle(color: Colors.black),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }

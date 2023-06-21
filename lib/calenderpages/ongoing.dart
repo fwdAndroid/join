@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:join/activities_details/calenders_details.dart';
+import 'package:join/activities_details/detail.page.dart';
 
 class OnGoing extends StatefulWidget {
   OnGoing({
@@ -13,8 +13,8 @@ class OnGoing extends StatefulWidget {
 
 class _OnGoingState extends State<OnGoing> {
   final Stream<QuerySnapshot> _usersStream = FirebaseFirestore.instance
-      .collection('calenders')
-      .where("status", isEqualTo: "ongoing")
+      .collection('activity')
+      .where("activitystatus", isEqualTo: "ongoing")
       .snapshots();
   @override
   Widget build(BuildContext context) {
@@ -49,31 +49,53 @@ class _OnGoingState extends State<OnGoing> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Container(
-                        height: 100,
-                        child: Stack(
-                          children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(10),
-                              child: Image.network(
-                                data['image'],
-                                height: 100,
-                                fit: BoxFit.cover,
-                                width: MediaQuery.of(context).size.width,
+                      InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (builder) => DetailPage(
+                                date: data['date'],
+                                image: data['photo'],
+                                title: data['title'],
+                                statis: data['activitystatus'],
+                                desc: data['description'],
+                                endTime: data['endTime'],
+                                createid: data["uid"],
+                                uuid: data['uuid'],
+                                address: data['address'],
+                                startTime: data['startTime'],
+                                numbersofjoines: data['numberofjoiners'],
                               ),
                             ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Align(
-                                alignment: Alignment.topRight,
-                                child: Image.asset(
-                                  "assets/whiteshare.png",
-                                  height: 30,
-                                  width: 30,
+                          );
+                        },
+                        child: Container(
+                          height: 100,
+                          child: Stack(
+                            children: [
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: Image.network(
+                                  data['photo'],
+                                  height: 100,
+                                  fit: BoxFit.cover,
+                                  width: MediaQuery.of(context).size.width,
                                 ),
                               ),
-                            )
-                          ],
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Align(
+                                  alignment: Alignment.topRight,
+                                  child: Image.asset(
+                                    "assets/whiteshare.png",
+                                    height: 30,
+                                    width: 30,
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
                         ),
                       ),
                       SizedBox(
@@ -95,7 +117,7 @@ class _OnGoingState extends State<OnGoing> {
                       Padding(
                         padding: const EdgeInsets.only(left: 4.0),
                         child: Text(
-                          data['desc'],
+                          data['description'],
                           style: TextStyle(
                               fontWeight: FontWeight.w400,
                               color: Color(0xff160F29).withOpacity(.6),
@@ -153,6 +175,31 @@ class _OnGoingState extends State<OnGoing> {
                                   fontWeight: FontWeight.w400,
                                   color: Color(0xff160F29).withOpacity(.6),
                                   fontSize: 12),
+                            ),
+                            Spacer(),
+                            Container(
+                              width: 64,
+                              height: 20,
+                              decoration: BoxDecoration(
+                                color: Color(0xff246A73).withOpacity(.10),
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(2.0),
+                                child: Center(
+                                  child: Text(
+                                    data['numberofjoiners'].toString() +
+                                        '  Going',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w400,
+                                        color: Color(0xff246A73),
+                                        fontSize: 12),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              width: 5,
                             ),
                           ],
                         ),

@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-
 import 'package:intl/intl.dart';
 import 'package:join/activity/map_screen_activity.dart';
 
@@ -26,14 +24,8 @@ class _NextActivityPageState extends State<NextActivityPage> {
   TextEditingController startTimeController = TextEditingController();
   TextEditingController endTimeController = TextEditingController();
   DateTime? _selectedDate;
-  String googleApikey = "AIzaSyBffT8plN_Vdcd308KgmzIfGVQN6q-CkAo";
-  GoogleMapController? mapController; //contrller for Google map
-  CameraPosition? cameraPosition;
-  List latlong = [];
-  String location = 'Please move map to A specific location.';
   @override
   void initState() {
-    getLatLong();
     super.initState();
   }
 
@@ -65,129 +57,6 @@ class _NextActivityPageState extends State<NextActivityPage> {
       ),
       body: Column(
         children: [
-          // Padding(
-          //   padding: EdgeInsets.only(
-          //     left: 15,
-          //     top: 12,
-          //   ),
-          //   child: Row(
-          //     children: [
-          //       Image.asset(
-          //         "assets/bxs_category-alt.png",
-          //         height: 18,
-          //         width: 18,
-          //       ),
-          //       Padding(
-          //         padding: EdgeInsets.only(
-          //           left: 15,
-          //           bottom: 1,
-          //         ),
-          //         child: Text(
-          //           "Add Location",
-          //           overflow: TextOverflow.ellipsis,
-          //           textAlign: TextAlign.left,
-          //           style: TextStyle(
-          //               fontFamily: "ProximaNova",
-          //               fontWeight: FontWeight.w400,
-          //               fontSize: 16,
-          //               color: Color(0xff736F7F)),
-          //         ),
-          //       ),
-          //     ],
-          //   ),
-          // ),
-          // Container(
-          //   margin: EdgeInsets.only(left: 15, right: 15, top: 10),
-          //   child: Row(
-          //     mainAxisAlignment: MainAxisAlignment.center,
-          //     children: [
-          //       Expanded(
-          //         flex: 4,
-          //         child: Container(
-          //           width: 277,
-          //           height: 46,
-          //           child: TextFormField(
-          //             onTap: () async {
-          //               var place = await PlacesAutocomplete.show(
-          //                   context: context,
-          //                   apiKey: googleApikey,
-          //                   mode: Mode.overlay,
-          //                   types: [],
-          //                   strictbounds: false,
-          //                   // components: [
-          //                   //   Component(Component.country, 'ae')
-          //                   // ],
-          //                   //google_map_webservice package
-          //                   onError: (err) {
-          //                     print(err);
-          //                   });
-
-          //               if (place != null) {
-          //                 setState(() {
-          //                   location = place.description.toString();
-          //                   searchController.text = location;
-          //                 });
-          //                 final plist = GoogleMapsPlaces(
-          //                   apiKey: googleApikey,
-          //                   apiHeaders: await GoogleApiHeaders().getHeaders(),
-          //                   //from google_api_headers package
-          //                 );
-          //                 String placeid = place.placeId ?? "0";
-          //                 final detail =
-          //                     await plist.getDetailsByPlaceId(placeid);
-          //                 final geometry = detail.result.geometry!;
-          //                 final lat = geometry.location.lat;
-          //                 final lang = geometry.location.lng;
-          //                 var newlatlang = LatLng(lat, lang);
-          //                 mapController?.animateCamera(
-          //                     CameraUpdate.newCameraPosition(CameraPosition(
-          //                         target: newlatlang, zoom: 17)));
-          //               }
-          //             },
-          //             decoration: InputDecoration(
-          //               prefixIcon: IconButton(
-          //                   onPressed: () async {},
-          //                   icon: Icon(
-          //                     Icons.search,
-          //                     color: Colors.grey,
-          //                   )),
-          //               filled: true,
-          //               contentPadding: EdgeInsets.only(top: 10),
-          //               fillColor: Colors.white,
-          //               focusedBorder: OutlineInputBorder(
-          //                   borderRadius: BorderRadius.circular(6),
-          //                   borderSide: BorderSide(color: Colors.white)),
-          //               disabledBorder: OutlineInputBorder(
-          //                   borderRadius: BorderRadius.circular(6),
-          //                   borderSide: BorderSide(color: Colors.white)),
-          //               enabledBorder: OutlineInputBorder(
-          //                   borderRadius: BorderRadius.circular(6),
-          //                   borderSide: BorderSide(color: Colors.white)),
-          //               border: OutlineInputBorder(
-          //                   borderRadius: BorderRadius.circular(6),
-          //                   borderSide: BorderSide(color: Colors.white)),
-          //               hintText: "Search Location",
-          //               helperStyle: TextStyle(
-          //                 fontSize: 14,
-          //                 fontWeight: FontWeight.w200,
-          //                 color: Colors.grey,
-          //               ),
-          //             ),
-          //             focusNode: FocusNode(),
-          //             autofocus: true,
-          //             controller: searchController,
-          //           ),
-          //         ),
-          //       ),
-          //       Expanded(
-          //           child: Image.asset(
-          //         "assets/Group 1000001315.png",
-          //         width: 52,
-          //         height: 46,
-          //       ))
-          //     ],
-          //   ),
-          // ),
           Padding(
             padding: EdgeInsets.only(left: 12, bottom: 1, top: 12),
             child: Row(children: [
@@ -444,26 +313,64 @@ class _NextActivityPageState extends State<NextActivityPage> {
   }
 
   void createProfile() async {
-    if (endTimeController.text.isEmpty ||
-        endTimeController.text.isEmpty ||
-        createDateController.text.isEmpty) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('All Fields are required')));
-    } else {
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (builder) => MapScreenActivity(
-                    cate: widget.cate,
-                    title: widget.title,
-                    desc: widget.description,
-                    image: widget.image,
-                    starttime: startTimeController.text,
-                    endtime: endTimeController.text,
-                    day: createDateController.text,
-                  )));
-    }
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: const SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('Are you sure to continue ?'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text(
+                'Yes',
+                style: TextStyle(color: Colors.black),
+              ),
+              onPressed: () {
+                if (createDateController.text.isEmpty) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("Date of event is required")));
+                  Navigator.pop(context);
+                } else if (startTimeController.text.isEmpty) {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text("Start time of event is required")));
+                  Navigator.pop(context);
+                } else if (endTimeController.text.isEmpty) {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text("Ending time of event is required")));
+                } else {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (builder) => MapScreenActivity(
+                                cate: widget.cate,
+                                title: widget.title,
+                                desc: widget.description,
+                                image: widget.image,
+                                starttime: startTimeController.text,
+                                endtime: endTimeController.text,
+                                day: createDateController.text,
+                              )));
+                }
+              },
+            ),
+            TextButton(
+              child: const Text(
+                'No',
+                style: TextStyle(color: Colors.black),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
-
-  void getLatLong() {}
 }

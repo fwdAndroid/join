@@ -259,39 +259,85 @@ class _MapScreenActivityState extends State<MapScreenActivity> {
   }
 
   void createProfile() async {
-    if (_locationController.text.isEmpty) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text("All Fields are required")));
-    } else {
-      Position position = await Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.best);
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: const SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('Are you sure to add an event?'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text(
+                'Yes',
+                style: TextStyle(color: Colors.black),
+              ),
+              onPressed: () async {
+                if (_locationController.text.isEmpty) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("Location is required")));
+                  Navigator.pop(context);
+                } else {
+                  Position position = await Geolocator.getCurrentPosition(
+                      desiredAccuracy: LocationAccuracy.best);
 
-      String photoURL = await StorageMethods()
-          .uploadImageToStorage('UserPics', widget.image!, true);
+                  String photoURL = await StorageMethods()
+                      .uploadImageToStorage('UserPics', widget.image!, true);
 
-      FirebaseFirestore.instance.collection("activity").doc(uuid).set({
-        "title": widget.title,
-        "uuid": uuid,
-        "description": widget.desc,
-        "address": _locationController.text,
-        "category": widget.cate,
-        "photo": photoURL,
-        "latitude": position.latitude,
-        "longitude": position.longitude,
-        "date": widget.day,
-        "uid": FirebaseAuth.instance.currentUser!.uid,
-        "startTime": widget.starttime,
-        "endTime": widget.endtime,
-        "activity": widget.cate,
-        "activitystatus": "ongoing"
-      }).then((value) {
-        ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text("Activity Created Successfully")));
-        Navigator.push(
-            context, MaterialPageRoute(builder: (builder) => MainScreen()));
-      });
-    }
+                  FirebaseFirestore.instance
+                      .collection("activity")
+                      .doc(uuid)
+                      .set({
+                    "title": widget.title,
+                    "uuid": uuid,
+                    "description": widget.desc,
+                    "address": _locationController.text,
+                    "category": widget.cate,
+                    "photo": photoURL,
+                    "latitude": position.latitude,
+                    "longitude": position.longitude,
+                    "date": widget.day,
+                    "uid": FirebaseAuth.instance.currentUser!.uid,
+                    "startTime": widget.starttime,
+                    "endTime": widget.endtime,
+                    "activity": widget.cate,
+                    "activitystatus": "ongoing",
+                    "numberofjoiners": 0,
+                  }).then((value) {
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text("Activity Created Successfully")));
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (builder) => MainScreen()));
+                  });
+                }
+              },
+            ),
+            TextButton(
+              child: const Text(
+                'No',
+                style: TextStyle(color: Colors.black),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
+
+  // if (_locationController.text.isEmpty) {
+  //     ScaffoldMessenger.of(context)
+  //         .showSnackBar(SnackBar(content: Text("All Fields are required")));
+  //   } else {
+
+  //   }
 
   void getLatLong() async {
     setState(() {

@@ -6,7 +6,6 @@ import 'package:uuid/uuid.dart';
 
 class DetailPage extends StatefulWidget {
   final endTime;
-  final location;
   final startTime;
   final address;
   final desc;
@@ -15,18 +14,19 @@ class DetailPage extends StatefulWidget {
   final date;
   final title;
   final image;
+  final numbersofjoines;
   final statis;
   const DetailPage({
     super.key,
     required this.date,
     required this.image,
+    required this.numbersofjoines,
     required this.title,
     required this.statis,
     required this.desc,
     required this.endTime,
     required this.createid,
     required this.uuid,
-    required this.location,
     required this.address,
     required this.startTime,
   });
@@ -61,11 +61,14 @@ class _DetailPageState extends State<DetailPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Image.network(
-                  widget.image.toString(),
-                  height: 180,
-                  width: MediaQuery.of(context).size.width,
-                  fit: BoxFit.cover,
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: Image.network(
+                    widget.image.toString(),
+                    height: 180,
+                    width: MediaQuery.of(context).size.width,
+                    fit: BoxFit.cover,
+                  ),
                 ),
                 SizedBox(
                   height: 10,
@@ -295,40 +298,80 @@ class _DetailPageState extends State<DetailPage> {
                               ),
                               InkWell(
                                   onTap: () async {
-                                    var uuid = Uuid().v4();
-                                    // String c = await StorageMethods()
-                                    //     .uploadImageToStorage(
-                                    //         'UserPics', widget.image!, true);
-                                    await FirebaseFirestore.instance
-                                        .collection("calenders")
-                                        .doc(uuid)
-                                        .set({
-                                      "previousuuid": widget.uuid,
-                                      "title": widget.title,
-                                      "status": "ongoing",
-                                      "startTime": widget.startTime,
-                                      "endTime": widget.endTime,
-                                      "date": widget.date,
-                                      "image": widget.image,
-                                      "desc": widget.desc,
-                                      "joinname": document['name'],
-                                      "creatorid": widget.createid,
-                                      "currentuuid": uuid,
-                                      "joinid":
-                                          FirebaseAuth.instance.currentUser!.uid
-                                    }).then(
-                                      (value) => {
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(
-                                          SnackBar(
-                                            content: Text("Event Created"),
+                                    return showDialog<void>(
+                                      context: context,
+                                      barrierDismissible:
+                                          false, // user must tap button!
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          content: const SingleChildScrollView(
+                                            child: ListBody(
+                                              children: <Widget>[
+                                                Text(
+                                                    'Are you want to send the event join request ?'),
+                                              ],
+                                            ),
                                           ),
-                                        ),
-                                        Navigator.pushReplacement(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (builder) =>
-                                                    MainScreen()))
+                                          actions: <Widget>[
+                                            TextButton(
+                                              child: const Text(
+                                                'Send Request',
+                                                style: TextStyle(
+                                                    color: Colors.black),
+                                              ),
+                                              onPressed: () async {
+                                                var uuid = Uuid().v4();
+                                                await FirebaseFirestore.instance
+                                                    .collection("calenders")
+                                                    .doc(uuid)
+                                                    .set({
+                                                  "previousuuid": widget.uuid,
+                                                  "title": widget.title,
+                                                  "status": "ongoing",
+                                                  "startTime": widget.startTime,
+                                                  "endTime": widget.endTime,
+                                                  "date": widget.date,
+                                                  "image": widget.image,
+                                                  "desc": widget.desc,
+                                                  "joinname": document['name'],
+                                                  "creatorid": widget.createid,
+                                                  "currentuuid": uuid,
+                                                  "joinid": FirebaseAuth
+                                                      .instance
+                                                      .currentUser!
+                                                      .uid,
+                                                  "joinedRequest": "pending"
+                                                }).then(
+                                                  (value) => {
+                                                    ScaffoldMessenger.of(
+                                                            context)
+                                                        .showSnackBar(
+                                                      SnackBar(
+                                                        content: Text(
+                                                            "Event Join Request Send"),
+                                                      ),
+                                                    ),
+                                                    Navigator.pushReplacement(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (builder) =>
+                                                                MainScreen()))
+                                                  },
+                                                );
+                                              },
+                                            ),
+                                            TextButton(
+                                              child: const Text(
+                                                'No',
+                                                style: TextStyle(
+                                                    color: Colors.black),
+                                              ),
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                            ),
+                                          ],
+                                        );
                                       },
                                     );
                                   },
